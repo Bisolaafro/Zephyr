@@ -5,11 +5,9 @@
 (generate_opam_files true)
 
 (source
- (github username/reponame))
+ (github pp457/cs3110-final))
 
-(authors "Author Name")
-
-(maintainers "Maintainer Name")
+(authors "Bisola, Luis, Pedro")
 
 (license LICENSE)
 
