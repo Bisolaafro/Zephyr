@@ -6,3 +6,5 @@ doc:
 	dune build @doc
 run:
 	OCAMLRUNPARAM=b dune exec bin/main.exe
+opendoc: doc
+	@bash opendoc.sh
