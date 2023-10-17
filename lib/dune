@@ -1,3 +1,4 @@
 (library
  (name final)
+ (public_name Final)
  (libraries sdl2))
