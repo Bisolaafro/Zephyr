@@ -3,4 +3,5 @@ break-cases = fit-or-vertical
 exp-grouping = preserve
 parse-docstrings = true
 type-decl = sparse
+doc-comments = before
 wrap-comments = true
