@@ -1,7 +1,6 @@
 (* open Final *)
 open Sdlevent
 open Sdl
-open Final
 open Final.Keyboard
 open Final.Player
 
