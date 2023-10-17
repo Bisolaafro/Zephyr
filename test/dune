@@ -1,2 +1,3 @@
 (test
- (name final))
+ (name main)
+ (libraries ounit2 final))
