@@ -1,5 +1,5 @@
-(** Keyboard module. This module utilizes the Sdlkey bindings to detect input
-    from the keyboard. *)
+(** Keyboard module. This module utilizes the Sdlevent and Sdlscancode bindings
+    to detect input from the keyboard. *)
 
 open Sdl
 open Sdlevent
