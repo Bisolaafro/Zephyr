@@ -1,6 +1,8 @@
 (* open Final *)
 open Sdlevent
 open Sdl
+open Final
+open Final.Keyboard
 
 (* Redefine mod operator because it has strange behavior in OCaml *)
 let ( mod ) x y =
@@ -36,72 +38,36 @@ let player =
     on_ground = true;
   }
 
-(* Keyboard state type *)
-type keys = {
-  mutable w : bool;
-  mutable s : bool;
-  mutable a : bool;
-  mutable d : bool;
-  mutable space : bool;
-}
-
-(* KEYBOARD STATE *)
-let key_state = { w = false; a = false; s = false; d = false; space = false }
+let keyboard = new_keyboard
 
 (* Process input helper: quit game *)
 let quit () =
   Sdl.quit ();
   exit 0
 
-(* Process input helper: update keyboard state *)
-let update_key_state k state =
-  let s =
-    match state with
-    | Pressed -> true
-    | Released -> false
-  in
-  begin
-    match k with
-    | Keycode.W -> key_state.w <- s
-    | Keycode.A -> key_state.a <- s
-    | Keycode.S -> key_state.s <- s
-    | Keycode.D -> key_state.d <- s
-    | Keycode.Space -> key_state.space <- s
-    | Keycode.Q | Keycode.Escape ->
-        Sdl.quit ();
-        exit 0
-    | _ -> ()
-  end
-
-(* Process input helper: call other helpers *)
-let proc_events = function
-  | KeyDown { scancode = Scancode.ESCAPE; _ } | Quit _ -> quit ()
-  | KeyDown { ke_state = state; keycode = k; _ }
-  | KeyUp { ke_state = state; keycode = k; _ } -> update_key_state k state
-  | _ -> ()
-
 (* PROCESS INPUT *)
 let rec event_loop () =
   match Event.poll_event () with
   | None -> ()
-  | Some ev ->
-      proc_events ev;
+  | Some e ->
+      update_keyboard e keyboard;
       event_loop ()
 
 (* UPDATE GAME *)
 let update_state dt =
+  if query_key Esc keyboard || query_key Q keyboard then quit ();
   let float_dt = float_of_int dt in
   player.on_ground <- player.pos.y <= ground_level;
   let accel = 0.005 in
-  if key_state.w then player.pos.y <- player.pos.y +. 0.;
-  if key_state.s then player.pos.y <- player.pos.y -. 0.;
-  if key_state.a then (
+  if query_key W keyboard then player.pos.y <- player.pos.y +. 0.;
+  if query_key S keyboard then player.pos.y <- player.pos.y -. 0.;
+  if query_key A keyboard then (
     player.pos.x <- player.pos.x -. 4.;
     player.vel.x <- -0.1);
-  if key_state.d then (
+  if query_key D keyboard then (
     player.pos.x <- player.pos.x +. 4.;
     player.vel.x <- 0.1);
-  if key_state.space && player.on_ground then (
+  if query_key Space keyboard && player.on_ground then (
     player.vel.x <- 0.;
     player.vel.y <- 1.;
     player.on_ground <- false);
