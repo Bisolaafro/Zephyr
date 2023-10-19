@@ -1,4 +1,8 @@
 (library
  (name final)
- (public_name Final)
+ (public_name final)
  (libraries sdl2))
+
+(documentation
+ (package final)
+ (mld_files index))
