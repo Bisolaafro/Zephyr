@@ -1,5 +1,7 @@
-(** Module that contains representations of keys. Facilitates accesing of
-    keyboard events in the [SDL] library. *)
+(** Module containing representations of keys. Facilitates accesing of keyboard
+    events in the [SDL] library. *)
+
+(** Key type. *)
 type key =
   | Zero
   | One
