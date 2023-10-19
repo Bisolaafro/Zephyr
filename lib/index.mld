@@ -1,0 +1,9 @@
+{0 Zephyr Game Engine}
+
+This package contains the Zephyr 2D game engine and a small game that was 
+made using it. The development of this engine was made possible thanks
+to the [OcamlSDL2] and accompanying libraries.
+
+Zephyr contains several modules and tools that should allow for streamlined
+game development. The modules can be found in the {!module: final} 
+package documentation. Test if you can see {!module: final.Keyboard}
