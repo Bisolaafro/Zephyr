@@ -139,6 +139,7 @@ let update_key k s t =
     | Scancode.Num8 -> t.eight <- s_bool
     | Scancode.Num9 -> t.nine <- s_bool
     | Scancode.SPACE -> t.space <- s_bool
+    | Scancode.ESCAPE -> t.esc <- s_bool
     | Scancode.RETURN -> t.enter_main <- s_bool
     | _ -> print_string "Non alpha-numeric key pressed!"
   end
