@@ -1,7 +1,5 @@
 (** Player module. Includes functions to initialize, update state and draw a
-    player.
-
-    Authors: Luis Hernández Rocha, Pedro Pontes García, Tawakalt Bisola Okunola. *)
+    player. *)
 
 (** Represents a player. *)
 type t = {

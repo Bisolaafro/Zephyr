@@ -1,7 +1,5 @@
 (** Keyboard module. This module utilizes the [Sdlevent] and [Sdlscancode]
-    bindings to detect input from the keyboard.
-
-    Authors: Luis Hernández Rocha, Pedro Pontes García, Tawakalt Bisola Okunola. *)
+    bindings to detect input from the keyboard. *)
 
 open Sdl
 open Sdlevent

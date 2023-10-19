@@ -1,5 +1,4 @@
-(** Simple vector module.
-    @author Pedro Pontes García *)
+(** Simple vector module. *)
 
 (** Represents a vector. *)
 type t = {

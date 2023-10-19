@@ -1,7 +1,5 @@
 (** Obstacle module. Includes a type to represent an obstacle and functions to
-    initialize them, draw them and check collisions.
-
-    Authors: Luis Hernández Rocha, Pedro Pontes García, Tawakalt Bisola Okunola. *)
+    initialize them, draw them and check collisions. *)
 
 (** Represents an obstacle. *)
 type t = {
