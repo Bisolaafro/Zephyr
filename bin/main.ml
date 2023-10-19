@@ -35,17 +35,22 @@ let update_state dt =
   update_player_state keyboard dt player;
   if
     Sdlrect.has_intersection (Option.get player.rect) (Option.get obstacle.rect)
-  then
+  then begin
     if
       (* if player.pos.x +. 264. < obstacle.bottom_left.x +. 50. then
          player.pos.x <- obstacle.bottom_left.x -. 264.; if player.pos.x >
          obstacle.bottom_left.x +. 250. then player.pos.x <-
          obstacle.bottom_left.x +. 300.; *)
-      player.pos.y -. 174. > obstacle.bottom_left.y -. 100. && player.vel.y < 0.
+      player.pos.y -. 174. > obstacle.bottom_left.y -. 50. && player.vel.y < 0.
     then (
       player.pos.y <- obstacle.bottom_left.y +. 174.;
       player.on_ground <- true;
-      player.vel.y <- 0.);
+      player.vel.y <- 0.)
+    else if player.pos.x +. 264. > obstacle.bottom_left.x && player.vel.x > 0.
+    then player.pos.x <- obstacle.bottom_left.x -. 264.
+    else if player.pos.x < obstacle.bottom_left.x +. 200. && player.vel.x < 0.
+    then player.pos.x <- obstacle.bottom_left.x +. 200.
+  end;
   (* if player.pos.y < obstacle.bottom_left.y -. 200. then player.pos.y <-
      obstacle.bottom_left.y); *)
   player.rect <-

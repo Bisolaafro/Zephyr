@@ -41,6 +41,9 @@ let update_player_state k dt t =
   if t.pos.y <= ground_level then (
     t.on_ground <- true;
     t.pos.y <- ground_level);
+  if t.on_ground then (
+    t.vel.x <- 0.;
+    t.time_on_ground <- t.time_on_ground + 1);
   if query_key A k then (
     t.pos.x <- t.pos.x -. dx;
     t.vel.x <- -.dvx);
@@ -52,9 +55,6 @@ let update_player_state k dt t =
     t.vel.y <- dvy;
     t.on_ground <- false;
     t.time_on_ground <- 0);
-  if t.on_ground then (
-    t.vel.x <- 0.;
-    t.time_on_ground <- t.time_on_ground + 1);
   t.rect <-
     Some
       {
