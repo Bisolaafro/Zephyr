@@ -40,7 +40,8 @@ let init_object texture (x0, y0) (x1, y1) grav t =
       (Sdlrect.make4 (int_of_float t.pos.x)
          (int_of_float (float_of_int Consts.height -. (t.pos.y +. t.height)))
          (int_of_float t.width) (int_of_float t.height));
-  t.affected_by_gravity <- grav
+  t.affected_by_gravity <- grav;
+  t.on_ground <- t.pos.y <= Consts.ground_level
 
 let update_object_state dt t =
   let float_dt = float_of_int dt in
