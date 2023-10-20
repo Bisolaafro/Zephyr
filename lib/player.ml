@@ -10,7 +10,7 @@ type t = {
 let dx = 4.
 let dvx = 0.2
 let dvy = 2.
-let jump_cooldown = 7
+let jump_cooldown = 4
 let new_player () = { obj = new_object (); time_on_ground = 0 }
 
 let init_player texture t =
