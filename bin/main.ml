@@ -30,7 +30,13 @@ let quit_game () =
 
 (* UPDATE GAME *)
 let update_state dt =
-  if query_key Esc keyboard || query_key Q keyboard then quit_game ();
+  if query_key Esc keyboard then quit_game ();
+  if query_key E keyboard then (
+    obj1.affected_by_gravity <- true;
+    obj1.vel.x <- 0.5);
+  if query_key Q keyboard then (
+    obj1.affected_by_gravity <- true;
+    obj1.vel.y <- 2.);
   update_player_state keyboard dt player;
   update_object_state dt obj1;
   update_object_state dt obj2;
