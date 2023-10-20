@@ -7,4 +7,4 @@ type t = {
 }
 
 (** Returns the zero vector. *)
-val zero : t
+val zero : unit -> t

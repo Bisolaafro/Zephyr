@@ -3,4 +3,4 @@ type t = {
   mutable y : float;
 }
 
-let zero = { x = 0.; y = 0. }
+let zero () = { x = 0.; y = 0. }
