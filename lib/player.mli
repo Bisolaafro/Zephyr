@@ -3,17 +3,12 @@
 
 (** Represents a player. *)
 type t = {
-  pos : Vector.t;
-  vel : Vector.t;
-  src_rect : Sdlrect.t option;
-  mutable texture : Sdltexture.t option;
-  mutable rect : Sdlrect.t option;
-  mutable on_ground : bool;
+  obj : Gameobject.t;
   mutable time_on_ground : int;
 }
 
 (** Returns new player. *)
-val new_player : t
+val new_player : unit -> t
 
 (** Initializes player with given texture.
     - Parameter [texture]: initial texture for the player.
