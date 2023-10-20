@@ -8,6 +8,7 @@ type t = {
   mutable rect : Sdlrect.t option;
   mutable affected_by_gravity : bool;
   mutable on_ground : bool;
+  mutable facing_back : bool;
 }
 
 let new_object () =
@@ -21,6 +22,7 @@ let new_object () =
     rect = None;
     affected_by_gravity = false;
     on_ground = true;
+    facing_back = false;
   }
 
 let init_object texture (x0, y0) (x1, y1) grav t =
@@ -49,6 +51,8 @@ let update_object_state dt t =
   if t.pos.y <= Consts.ground_level then (
     t.pos.y <- Consts.ground_level;
     t.on_ground <- true);
+  if t.vel.x < 0. then t.facing_back <- true;
+  if t.vel.x > 0. then t.facing_back <- false;
   if t.on_ground then t.vel.x <- 0.;
   if t.pos.y <= Consts.ground_level then t.pos.y <- Consts.ground_level;
   t.rect <-
@@ -60,5 +64,7 @@ let update_object_state dt t =
       }
 
 let draw_object r t =
-  Sdlrender.copy r ~texture:(Option.get t.texture)
-    ~src_rect:(Option.get t.src_rect) ~dst_rect:(Option.get t.rect) ()
+  Sdlrender.copyEx r ~texture:(Option.get t.texture)
+    ~src_rect:(Option.get t.src_rect) ~dst_rect:(Option.get t.rect) ~angle:0.
+    ~flip:(if t.facing_back then Flip_None else Flip_Horizontal)
+    ()

@@ -12,6 +12,7 @@ type t = {
   mutable rect : Sdlrect.t option;
   mutable affected_by_gravity : bool;
   mutable on_ground : bool;
+  mutable facing_back : bool;
 }
 
 (** Returns new game object. *)
