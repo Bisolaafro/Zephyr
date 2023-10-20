@@ -2,16 +2,15 @@ open Sdlevent
 open Sdl
 open Final.Keyboard
 open Final.Player
-open Final.Obstacle
+open Final.Gameobject
+open Final.Consts
 
-(* Some game constants *)
-let width, height = (1920, 1080)
-let bg_rect = Rect.make4 ~x:0 ~y:0 ~w:1920 ~h:1080
-let caml_rect = Rect.make4 ~x:0 ~y:0 ~w:264 ~h:174
+let bg_rect = Rect.make4 ~x:0 ~y:0 ~w:width ~h:height
 
 (* PLAYER *)
-let player = new_player
-let obstacle = new_obstacle
+let player = new_player ()
+let obj1 = new_object ()
+let obj2 = new_object ()
 
 (* KEYBOARD *)
 let keyboard = new_keyboard
@@ -33,32 +32,66 @@ let quit_game () =
 let update_state dt =
   if query_key Esc keyboard || query_key Q keyboard then quit_game ();
   update_player_state keyboard dt player;
+  update_object_state dt obj1;
+  update_object_state dt obj2;
   if
-    Sdlrect.has_intersection (Option.get player.rect) (Option.get obstacle.rect)
+    Sdlrect.has_intersection (Option.get player.obj.rect) (Option.get obj1.rect)
   then begin
     if
-      (* if player.pos.x +. 264. < obstacle.bottom_left.x +. 50. then
-         player.pos.x <- obstacle.bottom_left.x -. 264.; if player.pos.x >
-         obstacle.bottom_left.x +. 250. then player.pos.x <-
-         obstacle.bottom_left.x +. 300.; *)
-      player.pos.y -. 174. > obstacle.bottom_left.y -. 50. && player.vel.y < 0.
+      player.obj.pos.y > obj1.pos.y +. obj1.height -. 50.
+      && player.obj.vel.y < 0.
     then (
-      player.pos.y <- obstacle.bottom_left.y +. 174.;
-      player.on_ground <- true;
-      player.vel.y <- 0.)
-    else if player.pos.x +. 264. > obstacle.bottom_left.x && player.vel.x > 0.
-    then player.pos.x <- obstacle.bottom_left.x -. 264.
-    else if player.pos.x < obstacle.bottom_left.x +. 200. && player.vel.x < 0.
-    then player.pos.x <- obstacle.bottom_left.x +. 200.
+      player.obj.pos.y <- obj1.pos.y +. obj1.height;
+      player.obj.on_ground <- true;
+      player.obj.vel.y <- 0.)
+    else if
+      player.obj.pos.y +. player.obj.height < obj1.pos.y +. 50.
+      && player.obj.vel.y > 0.
+    then (
+      player.obj.pos.y <- obj1.pos.y -. player.obj.height;
+      player.obj.vel.y <- 0.)
+    else if
+      player.obj.pos.x +. player.obj.width < obj1.pos.x +. 50.
+      && player.obj.vel.x > 0.
+    then player.obj.pos.x <- obj1.pos.x -. player.obj.width
+    else if
+      player.obj.pos.x > obj1.pos.x +. obj1.width -. 50.
+      && player.obj.vel.x < 0.
+    then player.obj.pos.x <- obj1.pos.x +. obj1.width
   end;
-  (* if player.pos.y < obstacle.bottom_left.y -. 200. then player.pos.y <-
-     obstacle.bottom_left.y); *)
-  player.rect <-
+  if
+    Sdlrect.has_intersection (Option.get player.obj.rect) (Option.get obj2.rect)
+  then begin
+    if
+      player.obj.pos.y > obj2.pos.y +. obj2.height -. 50.
+      && player.obj.vel.y < 0.
+    then (
+      player.obj.pos.y <- obj2.pos.y +. obj2.height;
+      player.obj.on_ground <- true;
+      player.obj.vel.y <- 0.)
+    else if
+      player.obj.pos.y +. player.obj.height < obj2.pos.y +. 50.
+      && player.obj.vel.y > 0.
+    then (
+      player.obj.pos.y <- obj2.pos.y -. player.obj.height;
+      player.obj.vel.y <- 0.)
+    else if
+      player.obj.pos.x +. player.obj.width < obj2.pos.x +. 50.
+      && player.obj.vel.x > 0.
+    then player.obj.pos.x <- obj2.pos.x -. player.obj.width
+    else if
+      player.obj.pos.x > obj2.pos.x +. obj2.width -. 50.
+      && player.obj.vel.x < 0.
+    then player.obj.pos.x <- obj2.pos.x +. obj2.width
+  end;
+  player.obj.rect <-
     Some
       {
-        (Option.get player.rect) with
-        x = int_of_float player.pos.x mod 1920;
-        y = int_of_float (float_of_int 1080 -. player.pos.y);
+        (Option.get player.obj.rect) with
+        x = int_of_float player.obj.pos.x;
+        y =
+          int_of_float
+            (float_of_int height -. (player.obj.pos.y +. player.obj.height));
       }
 
 (* INITIALIZE GAME *)
@@ -69,7 +102,8 @@ let init () =
       ~title:"Polaris" ~flags:[ Window.FullScreen ]
   in
   let rndr =
-    Render.create_renderer ~win:window ~index:(-1) ~flags:[ Render.Accelerated ]
+    Render.create_renderer ~win:window ~index:(-1)
+      ~flags:[ Render.PresentVSync ]
   in
   let load_sprite renderer ~filename =
     let surf = Surface.load_bmp ~filename in
@@ -79,12 +113,13 @@ let init () =
   in
   let caml_file = "assets/caml-export.bmp" in
   let bg_file = "assets/Background.bmp" in
-  let rect_file = "assets/box.bmp" in
+  let box_file = "assets/box.bmp" in
   let caml = load_sprite rndr ~filename:caml_file in
   let bg = load_sprite rndr ~filename:bg_file in
-  let rect = load_sprite rndr ~filename:rect_file in
+  let box = load_sprite rndr ~filename:box_file in
   init_player caml player;
-  init_obstacle rect (500, 220) (700, 420) obstacle;
+  init_object box (1100., 420.) (1240., 530.) false obj1;
+  init_object box (700., 720.) (840., 830.) true obj2;
   (rndr, bg)
 
 (* DRAW GAME *)
@@ -93,7 +128,8 @@ let draw (rndr, bg) =
   Render.set_scale rndr (1.0, 1.0);
   Render.copy rndr ~texture:bg ~src_rect:bg_rect ~dst_rect:bg_rect ();
   draw_player rndr player;
-  draw_obstacle rndr obstacle;
+  draw_object rndr obj1;
+  draw_object rndr obj2;
   Render.render_present rndr
 
 (* GAME LOOP *)
