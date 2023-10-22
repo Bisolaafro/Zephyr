@@ -25,16 +25,17 @@ let new_object () =
     facing_back = false;
   }
 
-let init_object texture (x0, y0) (x1, y1) grav t =
+let init_object texture (x0, y0) (x1, y1) grav t
+    ?src:(src_rect =
+        Some
+          (Sdlrect.make4 ~x:0 ~y:0 ~w:(int_of_float t.width)
+             ~h:(int_of_float t.height))) () =
   t.width <- x1 -. x0;
   t.height <- y1 -. y0;
   t.pos.x <- x0;
   t.pos.y <- y0;
   t.texture <- Some texture;
-  t.src_rect <-
-    Some
-      (Sdlrect.make4 ~x:0 ~y:0 ~w:(int_of_float t.width)
-         ~h:(int_of_float t.height));
+  t.src_rect <- src_rect;
   t.rect <-
     Some
       (Sdlrect.make4 (int_of_float t.pos.x)

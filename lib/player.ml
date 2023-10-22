@@ -14,7 +14,7 @@ let jump_cooldown = 4
 let new_player () = { obj = new_object (); time_on_ground = 0 }
 
 let init_player texture t =
-  init_object texture (100., 100.) (364., 274.) true t.obj
+  init_object texture (100., 100.) (364., 274.) true t.obj ()
 
 let update_player_state k dt t =
   update_object_state dt t.obj;

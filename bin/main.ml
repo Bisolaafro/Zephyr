@@ -124,8 +124,8 @@ let init () =
   let bg = load_sprite rndr ~filename:bg_file in
   let box = load_sprite rndr ~filename:box_file in
   init_player caml player;
-  init_object box (1100., 420.) (1240., 530.) false obj1;
-  init_object box (700., 720.) (840., 830.) true obj2;
+  init_object box (1100., 420.) (1240., 530.) false obj1 ();
+  init_object box (700., 720.) (840., 830.) true obj2 ();
   (rndr, bg)
 
 (* DRAW GAME *)

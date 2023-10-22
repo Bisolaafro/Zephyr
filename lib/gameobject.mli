@@ -25,7 +25,14 @@ val new_object : unit -> t
     - Parameter [gravity]: whether the game object is affected by gravity.
     - Parameter [obj] game object. *)
 val init_object :
-  Sdltexture.t -> float * float -> float * float -> bool -> t -> unit
+  Sdltexture.t ->
+  float * float ->
+  float * float ->
+  bool ->
+  t ->
+  ?src:Sdlrect.t option ->
+  unit ->
+  unit
 
 (** Updates object state.
     - Parameter [dt]: time elapsed since last update.
