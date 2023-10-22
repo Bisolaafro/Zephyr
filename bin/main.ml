@@ -97,6 +97,7 @@ let update_state dt =
 (* INITIALIZE GAME *)
 let init () =
   Sdl.init [ `EVERYTHING ];
+  Sdlimage.init [ `PNG ];
   let window =
     Window.create ~pos:(`centered, `centered) ~dims:(width, height)
       ~title:"Polaris" ~flags:[ Window.FullScreen ]
@@ -105,18 +106,15 @@ let init () =
     Render.create_renderer ~win:window ~index:(-1)
       ~flags:[ Render.PresentVSync ]
   in
-  let load_sprite renderer ~filename =
-    let surf = Surface.load_bmp ~filename in
-    let tex = Texture.create_from_surface renderer surf in
-    Surface.free surf;
-    tex
+  let load_sprite_bmp renderer ~filename =
+    Final.TextureLoader.(load_texture filename BMP renderer)
   in
   let caml_file = "assets/caml-export.bmp" in
   let bg_file = "assets/Background.bmp" in
   let box_file = "assets/box.bmp" in
-  let caml = load_sprite rndr ~filename:caml_file in
-  let bg = load_sprite rndr ~filename:bg_file in
-  let box = load_sprite rndr ~filename:box_file in
+  let caml = load_sprite_bmp rndr ~filename:caml_file in
+  let bg = load_sprite_bmp rndr ~filename:bg_file in
+  let box = load_sprite_bmp rndr ~filename:box_file in
   init_player caml player;
   GameObject.init_object box (1100., 420.) (1240., 530.) false obj1;
   GameObject.init_object box (700., 720.) (840., 830.) true obj2;

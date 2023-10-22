@@ -1,7 +1,7 @@
 (library
  (name final)
  (public_name final)
- (libraries sdl2))
+ (libraries sdl2 sdl2_img))
 
 (documentation
  (package final)
