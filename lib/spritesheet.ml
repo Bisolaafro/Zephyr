@@ -35,7 +35,11 @@ let new_spritesheet filename rows cols w h =
 let load_image renderer sheet =
   let len_str = String.length sheet.filename in
   let sub_str = String.sub sheet.filename (len_str - 3) 3 in
-  let final_str = if sub_str == "ebp" then "webp" else sub_str in
+  let final_str =
+    if sub_str = "ebp" then "webp"
+    else if sub_str = ".xv" then "xv"
+    else sub_str
+  in
   let img_format = get_image_format final_str in
   load_texture sheet.filename img_format renderer
 
