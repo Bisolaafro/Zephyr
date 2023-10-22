@@ -1,4 +1,5 @@
 open Sdl
+open TextureLoader
 
 type t = {
   filename : string;
@@ -10,14 +11,33 @@ type t = {
   mutable sprite_num_col : int;
 }
 
+let get_image_format str =
+  match str with
+  | "png" -> PNG
+  | "jpg" -> JPG
+  | "pcx" -> PCX
+  | "bmp" -> BMP
+  | "ico" -> ICO
+  | "cur" -> CUR
+  | "gif" -> GIF
+  | "lbm" -> LBM
+  | "pnm" -> PNM
+  | "tif" -> TIF
+  | "xcf" -> XCF
+  | "xpm" -> XPM
+  | "xv" -> XV
+  | "webp" -> WEBP
+  | _ -> failwith "Unsupported Image Format"
+
 let new_spritesheet filename rows cols w h =
   { filename; rows; cols; w; h; sprite_num_row = 0; sprite_num_col = 0 }
 
 let load_image renderer sheet =
-  let surf = Surface.load_bmp sheet.filename in
-  let tex = Texture.create_from_surface renderer surf in
-  Surface.free surf;
-  tex
+  let len_str = String.length sheet.filename in
+  let sub_str = String.sub sheet.filename (len_str - 3) 3 in
+  let final_str = if sub_str == "ebp" then "webp" else sub_str in
+  let img_format = get_image_format final_str in
+  load_texture sheet.filename img_format renderer
 
 let update_sprite_index sheet dt =
   if dt mod 10 = 0 && dt > 10 then

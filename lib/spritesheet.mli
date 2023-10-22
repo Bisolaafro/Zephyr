@@ -1,7 +1,13 @@
+open TextureLoader
+
 (** Creates a Spritesheet that can be used on a player/object for animation*)
 
 (**Represents a Spritesheet*)
 type t
+
+(**Returns the image format corresponding to the given string
+   - Parameter [str] - the str to be converted*)
+val get_image_format : string -> image_format
 
 (** Returns a new Spritesheet
     - Parameter [filename] : path of the image file
