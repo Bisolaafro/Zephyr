@@ -36,3 +36,6 @@ val update_object_state : int -> t -> unit
     - Parameter [renderer]: renderer to draw on.
     - Parameter [obj]: game object. *)
 val draw_object : Sdlrender.t -> t -> unit
+
+(**Changes the src rectangle of the gameobject*)
+val get_object : int -> int -> int -> int -> 'a -> t -> unit

@@ -25,3 +25,7 @@ val update_player_state : Keyboard.t -> int -> t -> unit
     - Parameter [renderer]: renderer to draw on.
     - Parameter [player]: player. *)
 val draw_player : Sdlrender.t -> t -> unit
+
+(** Changes the Frame of the Player*)
+val draw_animated_player :
+  int -> int -> int -> int -> Sdltype.renderer -> t -> unit

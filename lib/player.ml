@@ -33,3 +33,7 @@ let update_player_state k dt t =
     t.time_on_ground <- 0)
 
 let draw_player r t = draw_object r t.obj
+
+let draw_animated_player row col width height r t =
+  get_object row col width height r t.obj;
+  draw_object r t.obj

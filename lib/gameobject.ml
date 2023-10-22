@@ -69,3 +69,7 @@ let draw_object r t =
     ~src_rect:(Option.get t.src_rect) ~dst_rect:(Option.get t.rect) ~angle:0.
     ~flip:(if t.facing_back then Flip_None else Flip_Horizontal)
     ()
+
+let get_object row col width height r t =
+  t.src_rect <-
+    Some (Sdlrect.make4 ~x:(col * width) ~y:(row * height) ~w:width ~h:height)
