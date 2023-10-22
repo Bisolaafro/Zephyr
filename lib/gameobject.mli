@@ -37,6 +37,25 @@ module type GameObjectType = sig
       - Parameter [renderer]: renderer to draw on.
       - Parameter [obj]: game object. *)
   val draw_object : Sdlrender.t -> t -> unit
+
+  (** Changes the src rectangle of the gameobject.
+      - Parameter [row] : current row of the sprite in the spritesheet
+      - Parameter [col] : current column of the sprite in the spritesheet
+      - Parameter [width] : width of the sprite
+      - Parameter [height] : height of the sprite
+      - Parameter [renderer] : renderer to draw on
+      - Parameter [obj] : game object*)
+  val get_object : int -> int -> int -> int -> Sdlrender.t -> t -> unit
+
+  (** draws an animated object
+      - Parameter [row] : current row of the sprite in the spritesheet
+      - Parameter [col] : current column of the sprite in the spritesheet
+      - Parameter [width] : width of the sprite
+      - Parameter [height] : height of the sprite
+      - Parameter [renderer] : renderer to draw on
+      - Parameter [obj] : game object*)
+  val draw_animated_object :
+    int -> int -> int -> int -> Sdlrender.t -> t -> unit
 end
 
 (** Implementation of GameObject *)

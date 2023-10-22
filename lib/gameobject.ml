@@ -19,6 +19,10 @@ module type GameObjectType = sig
 
   val update_object_state : int -> t -> unit
   val draw_object : Sdlrender.t -> t -> unit
+  val get_object : int -> int -> int -> int -> Sdlrender.t -> t -> unit
+
+  val draw_animated_object :
+    int -> int -> int -> int -> Sdlrender.t -> t -> unit
 end
 
 module GameObject = struct
@@ -64,7 +68,8 @@ module GameObject = struct
         (Sdlrect.make4 (int_of_float t.pos.x)
            (int_of_float (float_of_int Consts.height -. (t.pos.y +. t.height)))
            (int_of_float t.width) (int_of_float t.height));
-    t.affected_by_gravity <- grav
+    t.affected_by_gravity <- grav;
+    t.on_ground <- t.pos.y <= Consts.ground_level
 
   let update_object_state dt t =
     let float_dt = float_of_int dt in
@@ -92,4 +97,12 @@ module GameObject = struct
       ~src_rect:(Option.get t.src_rect) ~dst_rect:(Option.get t.rect) ~angle:0.
       ~flip:(if t.facing_back then Flip_None else Flip_Horizontal)
       ()
+
+  let get_object row col width height r t =
+    t.src_rect <-
+      Some (Sdlrect.make4 ~x:(col * width) ~y:(row * height) ~w:width ~h:height)
+
+  let draw_animated_object row col width height r t =
+    get_object row col width height r t;
+    draw_object r t
 end

@@ -25,3 +25,13 @@ val update_player_state : Keyboard.t -> int -> t -> unit
     - Parameter [renderer]: renderer to draw on.
     - Parameter [player]: player. *)
 val draw_player : Sdlrender.t -> t -> unit
+
+(** draws an animated player by changing frames
+    - Parameter [row] : current row of the sprite in the spritesheet
+    - Parameter [col] : current column of the sprite in the spritesheet
+    - Parameter [width] : width of the sprite
+    - Parameter [height] : height of the sprite
+    - Parameter [renderer] : renderer to draw on
+    - Parameter [player] : player*)
+val draw_animated_player :
+  int -> int -> int -> int -> Sdltype.renderer -> t -> unit
