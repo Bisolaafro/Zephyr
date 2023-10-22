@@ -3,7 +3,7 @@
 
 (** Represents a player. *)
 type t = {
-  obj : Gameobject.t;
+  obj : Gameobject.GameObject.t;
   mutable time_on_ground : int;
 }
 

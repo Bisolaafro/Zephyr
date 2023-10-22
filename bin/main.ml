@@ -9,8 +9,8 @@ let bg_rect = Rect.make4 ~x:0 ~y:0 ~w:width ~h:height
 
 (* PLAYER *)
 let player = new_player ()
-let obj1 = new_object ()
-let obj2 = new_object ()
+let obj1 = GameObject.new_object ()
+let obj2 = GameObject.new_object ()
 
 (* KEYBOARD *)
 let keyboard = new_keyboard
@@ -32,8 +32,8 @@ let quit_game () =
 let update_state dt =
   if query_key Esc keyboard || query_key Q keyboard then quit_game ();
   update_player_state keyboard dt player;
-  update_object_state dt obj1;
-  update_object_state dt obj2;
+  GameObject.update_object_state dt obj1;
+  GameObject.update_object_state dt obj2;
   if
     Sdlrect.has_intersection (Option.get player.obj.rect) (Option.get obj1.rect)
   then begin
@@ -118,8 +118,8 @@ let init () =
   let bg = load_sprite rndr ~filename:bg_file in
   let box = load_sprite rndr ~filename:box_file in
   init_player caml player;
-  init_object box (1100., 420.) (1240., 530.) false obj1;
-  init_object box (700., 720.) (840., 830.) true obj2;
+  GameObject.init_object box (1100., 420.) (1240., 530.) false obj1;
+  GameObject.init_object box (700., 720.) (840., 830.) true obj2;
   (rndr, bg)
 
 (* DRAW GAME *)
@@ -128,8 +128,8 @@ let draw (rndr, bg) =
   Render.set_scale rndr (1.0, 1.0);
   Render.copy rndr ~texture:bg ~src_rect:bg_rect ~dst_rect:bg_rect ();
   draw_player rndr player;
-  draw_object rndr obj1;
-  draw_object rndr obj2;
+  GameObject.draw_object rndr obj1;
+  GameObject.draw_object rndr obj2;
   Render.render_present rndr
 
 (* GAME LOOP *)
