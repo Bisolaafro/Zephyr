@@ -1,6 +1,5 @@
 open Sdl
 
-(* Define a type for the spritesheet *)
 type t = {
   filename : string;
   rows : int;
@@ -11,11 +10,9 @@ type t = {
   mutable sprite_num_col : int;
 }
 
-(* Define a function that creates a new spritesheet *)
 let new_spritesheet filename rows cols w h =
   { filename; rows; cols; w; h; sprite_num_row = 0; sprite_num_col = 0 }
 
-(* Define a function that loads the image file as a texture *)
 let load_image renderer sheet =
   let surf = Surface.load_bmp sheet.filename in
   let tex = Texture.create_from_surface renderer surf in

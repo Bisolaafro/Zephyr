@@ -73,3 +73,7 @@ let draw_object r t =
 let get_object row col width height r t =
   t.src_rect <-
     Some (Sdlrect.make4 ~x:(col * width) ~y:(row * height) ~w:width ~h:height)
+
+let draw_animated_object row col width height r t =
+  get_object row col width height r t;
+  draw_object r t
