@@ -8,7 +8,8 @@ type t = {
 }
 
 let init title pos dim flags =
-  Sdl.init [ `EVERYTHING ];
+  let _ = Sdl.init [ `EVERYTHING ] in
+  let _ = Sdlimage.init [ `JPG ] in
   let message = Sdlerror.get_error () in
   let this_running = if message = "" then true else false in
   print_string message;
