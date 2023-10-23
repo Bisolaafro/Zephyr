@@ -1,4 +1,4 @@
-The Zephyr game engine requires three major dependencies to work properly.
+The Zephyr game engine requires four major dependencies to work properly.
 It needs:
  - openGL
  - SDL2
@@ -21,8 +21,6 @@ for wsl2, assuming such a distro is used.) In addition, if you
 are using Windows 10, please see the guide at 
 https://gist.github.com/Mluckydwyer/8df7782b1a6a040e5d01305222149f3c#2-window-server 
 to install a window server. This should not be necessary if you are using Windows 11.
-
-
 
 To install SDL2, run the command
  $ sudo apt-get install libsdl2-2.0-0
