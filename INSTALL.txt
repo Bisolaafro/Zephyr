@@ -1,0 +1,41 @@
+The Zephyr game engine requires three major dependencies to work properly.
+It needs:
+ - openGL
+ - SDL2
+ - OcamlSDL2
+ - OcamlSdlImage.
+
+Before proceeding with the installation of those libraries, use the command 
+ $ sudo apt-get update
+Usually, this solves some issues that arise when trying to install the libraries.
+
+To install openGL, use the command
+ $ apt install mesa-utils libglu1-mesa-dev freeglut3-dev mesa-common-dev
+To test that this works properly, run the command
+ $ glxgears
+If the installation was successful, some spinning gears should display on screen.
+
+We assume that the user is using some sort of Debian, Ubuntu, 
+or any derivative Linux distributions (so this guide also works 
+for wsl2, assuming such a distro is used.) In addition, if you 
+are using Windows 10, please see the guide at 
+https://gist.github.com/Mluckydwyer/8df7782b1a6a040e5d01305222149f3c#2-window-server 
+to install a window server. This should not be necessary if you are using Windows 11.
+
+
+
+To install SDL2, run the command
+ $ sudo apt-get install libsdl2-2.0-0
+
+Finally, Zephyr is known to work with version 5.0.0 of the Ocaml compiler,
+(i.e. the one currently used in CS3110), so please make sure this is the version
+you are using.
+
+To install SDL2 and the SDL2 image bindings, use the following commands
+ $ opam install ocamlsdl2
+ $ opam install ocamlsdl2-image
+
+Finally, to build the game and play it use the commands
+ $ make build
+ $ make run
+
