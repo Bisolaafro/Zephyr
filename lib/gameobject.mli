@@ -1,3 +1,6 @@
+(** This module contains several useful features for representing the GameObject
+    abstraction. *)
+
 module type GameObjectType = sig
   (** Game object module. Includes a type to represent a game object and
       functions to initialize them, update their state, and draw them. *)
