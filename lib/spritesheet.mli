@@ -1,4 +1,4 @@
-open TextureLoader
+open Textureloader
 
 (** Creates a Spritesheet that can be used on a player/object for animation*)
 

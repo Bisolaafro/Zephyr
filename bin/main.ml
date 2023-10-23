@@ -4,6 +4,7 @@ open Final.Keyboard
 open Final.Player
 open Final.Gameobject
 open Final.Consts
+open Final.Textureloader
 
 let bg_rect = Rect.make4 ~x:0 ~y:0 ~w:width ~h:height
 
@@ -112,18 +113,17 @@ let init () =
     Render.create_renderer ~win:window ~index:(-1)
       ~flags:[ Render.PresentVSync ]
   in
-  let load_sprite_bmp renderer ~filename =
-    Final.TextureLoader.(load_texture filename BMP renderer)
-  in
-  let caml_file = "assets/caml-export.bmp" in
-  let bg_file = "assets/Background.bmp" in
+  let load_sprite_bmp renderer ~filename = load_texture filename BMP renderer in
+  let load_sprite_png renderer ~filename = load_texture filename PNG renderer in
+  let caml_file = "assets/caml-export.png" in
+  let bg_file = "assets/background.bmp" in
   let box_file = "assets/box.bmp" in
-  let caml = load_sprite_bmp rndr ~filename:caml_file in
+  let caml = load_sprite_png rndr ~filename:caml_file in
   let bg = load_sprite_bmp rndr ~filename:bg_file in
   let box = load_sprite_bmp rndr ~filename:box_file in
   init_player caml player;
-  GameObject.init_object box (1100., 420.) (1240., 530.) false obj1 ();
-  GameObject.init_object box (700., 720.) (840., 830.) true obj2 ();
+  GameObject.init_object box (1100., 420.) (1240., 530.) false obj1;
+  GameObject.init_object box (700., 720.) (840., 830.) true obj2;
   (rndr, bg)
 
 (* DRAW GAME *)

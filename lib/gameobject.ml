@@ -53,16 +53,17 @@ module GameObject = struct
       facing_back = false;
     }
 
-  let init_object texture (x0, y0) (x1, y1) grav t
-      ?src:(src_rect =
-          Some
-            (Sdlrect.make4 ~x:0 ~y:0 ~w:(int_of_float t.width)
-               ~h:(int_of_float t.height))) () =
+  let init_object texture (x0, y0) (x1, y1) grav t =
     t.width <- x1 -. x0;
     t.height <- y1 -. y0;
     t.pos.x <- x0;
     t.pos.y <- y0;
     t.texture <- Some texture;
+    let src_rect =
+      Some
+        (Sdlrect.make4 ~x:0 ~y:0 ~w:(int_of_float t.width)
+           ~h:(int_of_float t.height))
+    in
     t.src_rect <- src_rect;
     t.rect <-
       Some
@@ -95,7 +96,10 @@ module GameObject = struct
 
   let draw_object r t =
     Sdlrender.copyEx r ~texture:(Option.get t.texture)
-      ~src_rect:(Option.get t.src_rect) ~dst_rect:(Option.get t.rect) ~angle:0.
+      ~src_rect:
+        (Sdlrect.make4 ~x:0 ~y:0 ~w:(int_of_float t.width)
+           ~h:(int_of_float t.height))
+      ~dst_rect:(Option.get t.rect) ~angle:0.
       ~flip:(if t.facing_back then Flip_None else Flip_Horizontal)
       ()
 

@@ -1,5 +1,5 @@
 open Sdl
-open TextureLoader
+open Textureloader
 
 type t = {
   filename : string;

@@ -6,4 +6,4 @@ to the [OcamlSDL2] and accompanying libraries.
 
 Zephyr contains several modules and tools that should allow for streamlined
 game development. The modules can be found in the {!module: final} 
-package documentation. Test if you can see {!module: final.Keyboard}
+package documentation.
