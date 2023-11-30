@@ -1,3 +1,6 @@
+(** This module contains several useful features for representing the GameObject
+    abstraction. *)
+
 module type GameObjectType = sig
   (** Game object module. Includes a type to represent a game object and
       functions to initialize them, update their state, and draw them. *)
@@ -36,7 +39,8 @@ module type GameObjectType = sig
   (** Draws game object to renderer.
       - Parameter [renderer]: renderer to draw on.
       - Parameter [obj]: game object. *)
-  val draw_object : Sdlrender.t -> t -> unit
+  val draw_object :
+    ?src:Sdlrect.t -> ?flip:Sdlrender.renderer_flip -> Sdlrender.t -> t -> unit
 
   (** Changes the src rectangle of the gameobject.
       - Parameter [row] : current row of the sprite in the spritesheet

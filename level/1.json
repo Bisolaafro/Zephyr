@@ -1,0 +1,9 @@
+{
+    "next_lvl": "2.json",
+    "prev_lvl": "",
+    "player_pos": {
+        "x": 100.0,
+        "y": 300.0
+    },
+    "tilemap": "1.json"
+}

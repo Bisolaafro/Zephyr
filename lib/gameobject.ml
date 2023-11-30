@@ -18,7 +18,10 @@ module type GameObjectType = sig
     Sdltexture.t -> float * float -> float * float -> bool -> t -> unit
 
   val update_object_state : int -> t -> unit
-  val draw_object : Sdlrender.t -> t -> unit
+
+  val draw_object :
+    ?src:Sdlrect.t -> ?flip:Sdlrender.renderer_flip -> Sdlrender.t -> t -> unit
+
   val get_object : int -> int -> int -> int -> Sdlrender.t -> t -> unit
 
   val draw_animated_object :
@@ -59,10 +62,12 @@ module GameObject = struct
     t.pos.x <- x0;
     t.pos.y <- y0;
     t.texture <- Some texture;
-    t.src_rect <-
+    let src_rect =
       Some
         (Sdlrect.make4 ~x:0 ~y:0 ~w:(int_of_float t.width)
-           ~h:(int_of_float t.height));
+           ~h:(int_of_float t.height))
+    in
+    t.src_rect <- src_rect;
     t.rect <-
       Some
         (Sdlrect.make4 (int_of_float t.pos.x)
@@ -77,13 +82,12 @@ module GameObject = struct
     t.pos.y <- t.pos.y +. (t.vel.y *. float_dt) -. (0.5 *. a *. (float_dt ** 2.));
     t.vel.y <- t.vel.y -. (a *. float_dt);
     t.pos.x <- t.pos.x +. (t.vel.x *. float_dt);
-    if t.pos.y <= Consts.ground_level then (
-      t.pos.y <- Consts.ground_level;
-      t.on_ground <- true);
+    (* if t.pos.y <= Consts.ground_level then ( t.pos.y <- Consts.ground_level;
+       t.on_ground <- true); *)
     if t.vel.x < 0. then t.facing_back <- true;
     if t.vel.x > 0. then t.facing_back <- false;
     if t.on_ground then t.vel.x <- 0.;
-    if t.pos.y <= Consts.ground_level then t.pos.y <- Consts.ground_level;
+    (* if t.pos.y <= Consts.ground_level then t.pos.y <- Consts.ground_level; *)
     t.rect <-
       Some
         {
@@ -92,10 +96,19 @@ module GameObject = struct
           y = int_of_float (float_of_int Consts.height -. (t.pos.y +. t.height));
         }
 
-  let draw_object r t =
-    Sdlrender.copyEx r ~texture:(Option.get t.texture)
-      ~src_rect:(Option.get t.src_rect) ~dst_rect:(Option.get t.rect) ~angle:0.
-      ~flip:(if t.facing_back then Flip_None else Flip_Horizontal)
+  let draw_object ?src ?flip r t =
+    let src_rect =
+      if src = None then
+        Sdlrect.make4 ~x:0 ~y:0 ~w:(int_of_float t.width)
+          ~h:(int_of_float t.height)
+      else Option.get src
+    in
+    Sdlrender.copyEx r ~texture:(Option.get t.texture) ~src_rect
+      ~dst_rect:(Option.get t.rect) ~angle:0.
+      ~flip:
+        (if t.facing_back then Flip_None
+         else if flip <> None then Option.get flip
+         else Flip_Horizontal)
       ()
 
   let get_object row col width height r t =
