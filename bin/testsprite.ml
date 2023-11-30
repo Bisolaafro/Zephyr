@@ -4,17 +4,18 @@ open Final.Spritesheet
 open Final.Player
 open Sdl
 open Sdlevent
+open Final.Animations
 
 (* Define some constants *)
 let window_width, window_height = (1920, 1080)
 let window_height = 480
-let sprite_rows = 2
-let sprite_cols = 8
-let sprite_width = 102
-let sprite_height = 153
+let sprite_rows = 3
+let sprite_cols = 6
+let sprite_width = 115
+let sprite_height = 220
 let sprite_speed = 2.0
-let row_space = 0
-let col_space = 0
+let row_space = 3
+let col_space = 2
 let bg_rect = Rect.make4 ~x:0 ~y:0 ~w:1920 ~h:1080
 let player = new_player ()
 let keyboard = new_keyboard
@@ -54,22 +55,38 @@ let init () =
   let bg_file = "assets/splash.bmp" in
   let bg = load_sprite renderer ~filename:bg_file in
   let spritesheet =
-    new_spritesheet "assets/fire.bmp" sprite_rows sprite_cols sprite_width
-      sprite_height
+    new_spritesheet "assets/childsprite.png" sprite_rows sprite_cols
+      sprite_width sprite_height 0 0 (sprite_cols - 1) 5
   in
   let texture = load_image renderer spritesheet in
-  init_player texture player;
-  (renderer, spritesheet, bg)
+  init_player texture (100., 100.) (200., 300.) player;
+  let old_anim = ref "" in
+  (renderer, spritesheet, bg, old_anim)
 
-let draw (renderer, spritesheet, bg) dt =
+let draw (renderer, spritesheet, bg, old_anim) dt =
   Render.clear renderer;
   Render.set_scale renderer (1.0, 1.0);
   Render.copy renderer ~texture:bg ~src_rect:bg_rect ~dst_rect:bg_rect ();
-  let row, col = update_sprite_index spritesheet dt in
-  update_index_in_sheet spritesheet dt;
-  (* get_player row col sprite_width sprite_height renderer player; *)
-  draw_animated_player row col sprite_width sprite_height renderer player;
+  let anim, name = get_anim player in
+  if anim then (
+    let check =
+      if !old_anim <> name then (
+        old_anim := name;
+        true)
+      else false
+    in
+    update_animations spritesheet (Hashtbl.find animation_table name) check;
+    let row, col = update_sprite_index spritesheet dt anim in
+    draw_animated_player row col sprite_width sprite_height row_space col_space
+      renderer player);
+  if anim = false then
+    draw_animated_player 0 0 sprite_width sprite_height row_space col_space
+      renderer player;
   Render.render_present renderer
+
+let ctr = ref 0
+let nextA () = incr ctr
+let a = nextA
 
 let () =
   let renderer = init () in
@@ -77,7 +94,7 @@ let () =
     let t = Timer.get_ticks () in
     let dt = t - last_t in
     event_loop ();
-    draw renderer t;
+    draw renderer dt;
     update_state dt;
     main_loop t
   in

@@ -44,7 +44,7 @@ let init () =
       ~flags:[ Render.PresentVSync ]
   in
   let load_sprite_bmp renderer ~filename =
-    Final.TextureLoader.(load_texture filename BMP renderer)
+    Final.Textureloader.(load_texture filename BMP renderer)
   in
   let bg_file = "assets/Background.bmp" in
   let bg = load_sprite_bmp rndr ~filename:bg_file in
