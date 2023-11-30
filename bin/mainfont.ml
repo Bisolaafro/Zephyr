@@ -6,7 +6,7 @@ open Final.Player
 open Final.Gameobject
 open Final.Consts
 
-let file = "assets/FANTASY MAGIST.otf"
+let file = "assets/fantasy.otf"
 let color = { Sdlttf.r = 255; g = 0; b = 0; a = 0 }
 let text = "YOUR MOTHER"
 let bg_rect = Rect.make4 ~x:0 ~y:0 ~w:width ~h:height
