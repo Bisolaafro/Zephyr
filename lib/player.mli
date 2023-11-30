@@ -3,8 +3,10 @@
 
 (** Represents a player. *)
 type t = {
+  objx : Gameobject.GameObject.t;
+  objy : Gameobject.GameObject.t;
   obj : Gameobject.GameObject.t;
-  mutable time_on_ground : int;
+  mutable jumped : bool;
 }
 
 (** Returns new player. *)
@@ -13,13 +15,15 @@ val new_player : unit -> t
 (** Initializes player with given texture.
     - Parameter [texture]: initial texture for the player.
     - Parameter [player]: player. *)
-val init_player : Sdltexture.t -> t -> unit
+val init_player : Sdltexture.t -> float * float -> float * float -> t -> unit
 
 (** Updates player state.
     - Parameter [keyboard]: keyboard to read state from.
     - Parameter [dt]: time elapsed since last update.
     - Parameter [player]: player. *)
 val update_player_state : Keyboard.t -> int -> t -> unit
+
+val update_player_rects : t -> unit
 
 (** Draws player to renderer.
     - Parameter [renderer]: renderer to draw on.
