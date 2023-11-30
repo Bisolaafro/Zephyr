@@ -14,7 +14,7 @@ val new_font_object : string -> string -> int -> Sdlttf.color -> t
 (**creates a surface to render the font/text on *)
 val load_font : t -> unit
 
-(** renders the text using the font to the screen *)
+(** renders the text using the font to the screen. *)
 val static_render : Sdltype.renderer -> t -> unit -> unit
 
 (** updates the position of the text on the screen
