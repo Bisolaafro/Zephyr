@@ -82,13 +82,12 @@ module GameObject = struct
     t.pos.y <- t.pos.y +. (t.vel.y *. float_dt) -. (0.5 *. a *. (float_dt ** 2.));
     t.vel.y <- t.vel.y -. (a *. float_dt);
     t.pos.x <- t.pos.x +. (t.vel.x *. float_dt);
-    if t.pos.y <= Consts.ground_level then (
-      t.pos.y <- Consts.ground_level;
-      t.on_ground <- true);
+    (* if t.pos.y <= Consts.ground_level then ( t.pos.y <- Consts.ground_level;
+       t.on_ground <- true); *)
     if t.vel.x < 0. then t.facing_back <- true;
     if t.vel.x > 0. then t.facing_back <- false;
     if t.on_ground then t.vel.x <- 0.;
-    if t.pos.y <= Consts.ground_level then t.pos.y <- Consts.ground_level;
+    (* if t.pos.y <= Consts.ground_level then t.pos.y <- Consts.ground_level; *)
     t.rect <-
       Some
         {
