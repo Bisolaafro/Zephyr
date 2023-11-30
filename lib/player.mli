@@ -28,6 +28,8 @@ val update_player_rects : t -> unit
 (** Draws player to renderer.
     - Parameter [renderer]: renderer to draw on.
     - Parameter [player]: player. *)
+val get_anim : t -> bool * string
+
 val draw_player : Sdlrender.t -> t -> unit
 
 (** draws an animated player by changing frames
@@ -38,4 +40,4 @@ val draw_player : Sdlrender.t -> t -> unit
     - Parameter [renderer] : renderer to draw on
     - Parameter [player] : player*)
 val draw_animated_player :
-  int -> int -> int -> int -> Sdltype.renderer -> t -> unit
+  int -> int -> int -> int -> int -> int -> Sdltype.renderer -> t -> unit

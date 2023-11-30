@@ -10,6 +10,8 @@ module type GameObjectType = sig
     mutable affected_by_gravity : bool;
     mutable on_ground : bool;
     mutable facing_back : bool;
+    mutable animated : bool;
+    mutable anim_name : string;
   }
 
   val new_object : unit -> t
@@ -22,10 +24,11 @@ module type GameObjectType = sig
   val draw_object :
     ?src:Sdlrect.t -> ?flip:Sdlrender.renderer_flip -> Sdlrender.t -> t -> unit
 
-  val get_object : int -> int -> int -> int -> Sdlrender.t -> t -> unit
+  val get_object :
+    int -> int -> int -> int -> int -> int -> Sdlrender.t -> t -> unit
 
   val draw_animated_object :
-    int -> int -> int -> int -> Sdlrender.t -> t -> unit
+    int -> int -> int -> int -> int -> int -> Sdlrender.t -> t -> unit
 end
 
 module GameObject = struct
@@ -40,6 +43,8 @@ module GameObject = struct
     mutable affected_by_gravity : bool;
     mutable on_ground : bool;
     mutable facing_back : bool;
+    mutable animated : bool;
+    mutable anim_name : string;
   }
 
   let new_object () =
@@ -54,6 +59,8 @@ module GameObject = struct
       affected_by_gravity = false;
       on_ground = true;
       facing_back = false;
+      animated = false;
+      anim_name = "";
     }
 
   let init_object texture (x0, y0) (x1, y1) grav t =
@@ -108,11 +115,17 @@ module GameObject = struct
          else Flip_Horizontal)
       ()
 
-  let get_object row col width height r t =
-    t.src_rect <-
-      Some (Sdlrect.make4 ~x:(col * width) ~y:(row * height) ~w:width ~h:height)
+  let get_object row col width height row_space col_space r t =
+    let x, y =
+      if row = 0 && col = 0 then (0, 0)
+      else if row = 0 && col <> 0 then ((col * width) + (col_space * col), 0)
+      else if col = 0 && row <> 0 then (0, (row * height) + (row_space * row))
+      else
+        ((col * width) + (col_space * col), (row * height) + (row_space * row))
+    in
+    t.src_rect <- Some (Sdlrect.make4 ~x ~y ~w:width ~h:height)
 
-  let draw_animated_object row col width height r t =
-    get_object row col width height r t;
+  let draw_animated_object row col width height row_space col_space r t =
+    get_object row col width height row_space col_space r t;
     draw_object r t
 end

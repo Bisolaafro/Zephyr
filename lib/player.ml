@@ -1,6 +1,7 @@
 open Keyboard
 open Gameobject
 open Consts
+open Animations
 
 type t = {
   objx : GameObject.t;
@@ -58,24 +59,35 @@ let update_player_state k dt t =
   GameObject.update_object_state dt t.obj;
   if query_key A k && not (query_key D k) then (
     t.obj.pos.x <- t.obj.pos.x -. dx;
+    t.obj.animated <- true;
+    t.obj.anim_name <- get_name anim_1;
     t.obj.vel.x <- -.dvx);
   if query_key D k && not (query_key A k) then (
     t.obj.pos.x <- t.obj.pos.x +. dx;
+    t.obj.animated <- true;
+    t.obj.anim_name <- get_name anim_2;
     t.obj.vel.x <- dvx);
-  if query_key Space k = false then t.jumped <- false;
+  if query_key Space k = false then (
+    t.jumped <- false;
+    t.obj.animated <- false);
   if query_key Space k && t.obj.on_ground && t.jumped = false then (
+    t.obj.animated <- false;
     t.obj.vel.x <- 0.;
     t.obj.vel.y <- dvy;
     t.obj.on_ground <- false;
     t.jumped <- true);
+  if query_key A k = false && query_key D k = false then t.obj.animated <- false;
   t.objx.pos.x <- t.obj.pos.x;
   t.objx.pos.y <- t.obj.pos.y +. 10.;
   t.objy.pos.x <- t.obj.pos.x +. 10.;
   t.objy.pos.y <- t.obj.pos.y;
   t.obj.on_ground <- false
 
+let get_anim t = (t.obj.animated, t.obj.anim_name)
 let draw_player r t = GameObject.draw_object r t.obj
 
-let draw_animated_player row col width height r t =
-  let _ = GameObject.get_object row col width height r t.obj in
+let draw_animated_player row col width height row_space col_space r t =
+  let _ =
+    GameObject.get_object row col width height row_space col_space r t.obj
+  in
   GameObject.draw_object r t.obj
