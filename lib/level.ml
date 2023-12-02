@@ -3,9 +3,12 @@ open Tilemap
 open Yojson.Basic.Util
 open Textureloader
 open Consts
+open Sdl
+open Textureloader
 
 let collision_boundary_x = 15.
 let collision_boundary_y = 50.
+let bg_rect = Rect.make4 ~x:0 ~y:0 ~w:width ~h:height
 
 type level_state =
   | Previous
@@ -15,6 +18,7 @@ type level_state =
 type t = {
   mutable player : Player.t option;
   tilemap : Tilemap.t;
+  mutable background : Sdltexture.t option;
   mutable prev_level : string option;
   mutable next_level : string option;
   mutable state : level_state;
@@ -24,6 +28,7 @@ let new_level () =
   {
     player = None;
     tilemap = new_tilemap ();
+    background = None;
     prev_level = None;
     next_level = None;
     state = This;
@@ -38,10 +43,12 @@ let init_level file player r t =
      |> to_float, pos |> member "y" |> to_float) in *)
   let next = lvl_json |> member "next_lvl" |> to_string in
   let prev = lvl_json |> member "prev_lvl" |> to_string in
+  let bg = lvl_json |> member "background" |> to_string in
   init_tilemap tilemap_file r t.tilemap;
   t.player <- Some player;
   t.next_level <- (if next = "" then None else Some next);
-  t.prev_level <- (if prev = "" then None else Some prev)
+  t.prev_level <- (if prev = "" then None else Some prev);
+  t.background <- Some (load_texture bg PNG r)
 
 let check_collision i t =
   let player = Option.get t.player in
@@ -136,5 +143,7 @@ let update_level_state keyboard dt t =
 
 let draw_level r t =
   let player = Option.get t.player in
+  Render.copy r ~texture:(Option.get t.background) ~src_rect:bg_rect
+    ~dst_rect:bg_rect ();
   draw_tilemap r t.tilemap;
   draw_player r player

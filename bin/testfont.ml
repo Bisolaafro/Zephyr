@@ -27,7 +27,7 @@ let () =
   in
   let screen = Window.get_surface window in
 
-  let file = "assets/FANTASY MAGIST.otf" in
+  let file = "assets/fantasy.otf" in
   let font = Sdlttf.open_font ~file ~ptsize:30 in
   let color = { Sdlttf.r = 255; g = 0; b = 0; a = 0 } in
   let text = "Hello SDL2_TTF" in

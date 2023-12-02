@@ -6,6 +6,7 @@ type level_state =
 type t = {
   mutable player : Player.t option;
   tilemap : Tilemap.t;
+  mutable background : Sdltexture.t option;
   mutable prev_level : string option;
   mutable next_level : string option;
   mutable state : level_state;
