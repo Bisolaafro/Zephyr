@@ -10,6 +10,8 @@ module type GameObjectType = sig
     mutable affected_by_gravity : bool;
     mutable on_ground : bool;
     mutable facing_back : bool;
+    mutable animated : bool;
+    mutable anim_name : string;
   }
 
   val new_object : unit -> t
@@ -18,11 +20,15 @@ module type GameObjectType = sig
     Sdltexture.t -> float * float -> float * float -> bool -> t -> unit
 
   val update_object_state : int -> t -> unit
-  val draw_object : Sdlrender.t -> t -> unit
-  val get_object : int -> int -> int -> int -> Sdlrender.t -> t -> unit
+
+  val draw_object :
+    ?src:Sdlrect.t -> ?flip:Sdlrender.renderer_flip -> Sdlrender.t -> t -> unit
+
+  val get_object :
+    int -> int -> int -> int -> int -> int -> Sdlrender.t -> t -> unit
 
   val draw_animated_object :
-    int -> int -> int -> int -> Sdlrender.t -> t -> unit
+    int -> int -> int -> int -> int -> int -> Sdlrender.t -> t -> unit
 end
 
 module GameObject = struct
@@ -37,6 +43,8 @@ module GameObject = struct
     mutable affected_by_gravity : bool;
     mutable on_ground : bool;
     mutable facing_back : bool;
+    mutable animated : bool;
+    mutable anim_name : string;
   }
 
   let new_object () =
@@ -51,6 +59,8 @@ module GameObject = struct
       affected_by_gravity = false;
       on_ground = true;
       facing_back = false;
+      animated = false;
+      anim_name = "";
     }
 
   let init_object texture (x0, y0) (x1, y1) grav t =
@@ -79,13 +89,9 @@ module GameObject = struct
     t.pos.y <- t.pos.y +. (t.vel.y *. float_dt) -. (0.5 *. a *. (float_dt ** 2.));
     t.vel.y <- t.vel.y -. (a *. float_dt);
     t.pos.x <- t.pos.x +. (t.vel.x *. float_dt);
-    if t.pos.y <= Consts.ground_level then (
-      t.pos.y <- Consts.ground_level;
-      t.on_ground <- true);
     if t.vel.x < 0. then t.facing_back <- true;
     if t.vel.x > 0. then t.facing_back <- false;
     if t.on_ground then t.vel.x <- 0.;
-    if t.pos.y <= Consts.ground_level then t.pos.y <- Consts.ground_level;
     t.rect <-
       Some
         {
@@ -94,20 +100,32 @@ module GameObject = struct
           y = int_of_float (float_of_int Consts.height -. (t.pos.y +. t.height));
         }
 
-  let draw_object r t =
-    Sdlrender.copyEx r ~texture:(Option.get t.texture)
-      ~src_rect:
-        (Sdlrect.make4 ~x:0 ~y:0 ~w:(int_of_float t.width)
-           ~h:(int_of_float t.height))
+  let draw_object ?src ?flip r t =
+    let src_rect =
+      if src = None then
+        Sdlrect.make4 ~x:0 ~y:0 ~w:(int_of_float t.width)
+          ~h:(int_of_float t.height)
+      else Option.get src
+    in
+    Sdlrender.copyEx r ~texture:(Option.get t.texture) ~src_rect
       ~dst_rect:(Option.get t.rect) ~angle:0.
-      ~flip:(if t.facing_back then Flip_None else Flip_Horizontal)
+      ~flip:
+        (if t.facing_back then Flip_None
+         else if flip <> None then Option.get flip
+         else Flip_Horizontal)
       ()
 
-  let get_object row col width height r t =
-    t.src_rect <-
-      Some (Sdlrect.make4 ~x:(col * width) ~y:(row * height) ~w:width ~h:height)
+  let get_object row col width height row_space col_space r t =
+    let x, y =
+      if row = 0 && col = 0 then (0, 0)
+      else if row = 0 && col <> 0 then ((col * width) + (col_space * col), 0)
+      else if col = 0 && row <> 0 then (0, (row * height) + (row_space * row))
+      else
+        ((col * width) + (col_space * col), (row * height) + (row_space * row))
+    in
+    t.src_rect <- Some (Sdlrect.make4 ~x ~y ~w:width ~h:height)
 
-  let draw_animated_object row col width height r t =
-    get_object row col width height r t;
+  let draw_animated_object row col width height row_space col_space r t =
+    get_object row col width height row_space col_space r t;
     draw_object r t
 end
