@@ -1,7 +1,7 @@
 (library
  (name final)
  (public_name final)
- (libraries sdl2 sdl2_img))
+ (libraries sdl2 sdl2_img tsdl-mixer))
 
 (documentation
  (package final)
