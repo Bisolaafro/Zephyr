@@ -28,6 +28,8 @@ let new_font_object filename text font_size color =
     vel_y = None;
   }
 
+let quit_font () = Sdlttf.quit ()
+
 let load_font font_object =
   let font =
     Sdlttf.open_font ~file:font_object.filename ~ptsize:font_object.font_size

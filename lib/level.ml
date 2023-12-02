@@ -5,6 +5,8 @@ open Textureloader
 open Consts
 open Sdl
 open Textureloader
+open Animations
+open Spritesheet
 
 let collision_boundary_x = 15.
 let collision_boundary_y = 50.
@@ -147,3 +149,36 @@ let draw_level r t =
     ~dst_rect:bg_rect ();
   draw_tilemap r t.tilemap;
   draw_player r player
+
+let sprite_rows = 3
+let sprite_cols = 6
+let sprite_width = 115
+let sprite_height = 220
+let sprite_speed = 2.0
+let row_space = 3
+let col_space = 2
+
+let spritesheet =
+  new_spritesheet "assets/childsprite.png" sprite_rows sprite_cols sprite_width
+    sprite_height 0 0 (sprite_cols - 1) 5
+
+let old_anim = ref ""
+
+let draw_level_animated r t dt =
+  let player = Option.get t.player in
+  let anim, name = get_anim player in
+  if anim then (
+    let check =
+      if !old_anim <> name then (
+        old_anim := name;
+        true)
+      else false
+    in
+    update_animations spritesheet (Hashtbl.find animation_table name) check;
+    let row, col = update_sprite_index spritesheet dt anim in
+    draw_animated_player row col sprite_width sprite_height row_space col_space
+      r player);
+  if anim = false then
+    draw_animated_player 0 0 sprite_width sprite_height row_space col_space r
+      player;
+  draw_tilemap r t.tilemap
