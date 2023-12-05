@@ -4,6 +4,8 @@ open Final.Textureloader
 open Final.Animations
 open Final.Fonts
 open Sdl
+open Final.Vector
+open Final.Mixer
 
 (** TODO: WRITE A TEST PLAN -4: The test plan is missing. -1: The test plan does
     not explain which parts of the system were automatically tested by OUnit vs.
@@ -12,6 +14,9 @@ open Sdl
     randomized, etc.). -1: The test plan does not provide an argument for why
     the testing approach demonstrates the correctness of the system*)
 
+(* AUDIO INITIALIZATION. *)
+let _ = init [ MP3 ]
+let _ = open_audio 44100 MIX_DEFAULT_FORMAT 1 2048
 let sheet = new_spritesheet "assets/fire.bmp" 2 8 102 153
 let assert_file_type str1 str2 _ = assert_equal str1 str2
 
@@ -28,6 +33,89 @@ let assert_image_format_failure str =
   fun ctxt ->
     assert_raises ~msg:"Unsupported Image Format" exn (fun () ->
         try get_image_format str with Invalid_argument _ -> raise exn)
+
+(** [test_audio name file] asserts that calling
+    [Final.Mixer.Chunk.load_wav file] does not raise an exception. It does not
+    make sense to compare chunk objects, so we just test that the reading the
+    file does not crash. *)
+let test_audio_loader name file =
+  name >:: fun _ -> assert_equal () (ignore (Final.Mixer.Chunk.load_wav file))
+
+(** [test_audio name file] asserts that calling
+    [Final.Mixer.Chunk.load_wav file] on an invalid .wav [file] name raises a
+    [Final.Mixer.ReadError] exception. *)
+let test_audio_loader_exp name file =
+  name >:: fun _ ->
+  assert_raises
+    (Final.Mixer.ReadError ("Couldn't open " ^ file))
+    (fun _ -> Final.Mixer.Chunk.load_wav file)
+
+(** [test_vector name v1 v2] is the [OUnit] test that verifies that the
+    components of each vector is the same. *)
+let test_vector name v1 v2 =
+  name >:: fun _ ->
+  assert_equal v1 v2 ~printer:(fun { x; y } ->
+      "{" ^ string_of_float x ^ "; " ^ string_of_float y ^ "}")
+
+(** [test_float name x y] is the [OUnit2.test] that verifies that floats [x] and
+    [y] are equal up to the margin of error [e], which should ideally be small. *)
+let test_float name x y e =
+  name >:: fun _ ->
+  assert_equal x y ~printer:string_of_float ~cmp:(fun x y ->
+      Float.abs (x -. y) < e)
+
+let audio_test =
+  [
+    test_audio_loader "Loading rain_on_brick" "assets/rain_on_brick.mp3";
+    test_audio_loader_exp "Trying to load non-existent file" "nonsense.wav";
+    test_audio_loader_exp "Trying to load non-existent file" "hello.wav";
+    test_audio_loader "Loading jump sound" "assets/jump.wav";
+    test_audio_loader "Loading exterior sound effect" "assets/exterior_fx.wav";
+    test_audio_loader_exp "File name exists, but not in the right directory"
+      "files/exterior_fx.wav";
+  ]
+
+let vector_test =
+  [
+    test_vector "zero vector" { x = 0.; y = 0. } (zero ());
+    test_vector "addition of two zero vectors"
+      (add (zero ()) (zero ()))
+      (zero ());
+    test_vector "adding a vector to the zero vector does not change it"
+      (add (zero ()) { x = 4.3; y = 4.9 })
+      { x = 4.3; y = 4.9 };
+    (let v1 = { x = 0.5; y = 0.5 } in
+     scale 2. v1;
+     let v2 = { x = 1.0; y = 1.0 } in
+     test_vector "scaling vector by 2" v1 v2);
+    (let v1 = { x = 1.0; y = 1.0 } in
+     scale 1. v1;
+     let v2 = { x = 1.0; y = 1.0 } in
+     test_vector "scaling vector by 1 doesnt change it" v1 v2);
+    (let v1 = { x = 0.5; y = 0.5 } in
+     let v2 = { x = -0.5; y = -0.5 } in
+     let v3 = add v1 v2 in
+     test_vector "subtracting a vector from itself equals the zero vector" v3
+       (zero ()));
+    (let v = { x = 4.0; y = 4.0 } in
+     normalize v;
+     test_float
+       "the length of a normalized vector should be approximately one. " 1.
+       (v |> length))
+      0.0001;
+    (let v = { x = 2.0; y = 2.0 } in
+     normalize v;
+     test_float "normalizing vector whose components are 2 " 1. (v |> length))
+      0.0001;
+    (let v = { x = 1.0; y = 1.0 } in
+     test_float
+       "vector whose components are both 1 should have sqrt 2 length.  "
+       (sqrt 2.) (v |> length) 0.0001);
+    (let v = { x = 1.0; y = 0.0 } in
+     test_float "length of standard basis vector is 1. " 1. (v |> length) 0.0001);
+    (let v = { x = 0.0; y = 0.0 } in
+     test_float "length of 0 vector is 0. " 0. (v |> length) 0.0001);
+  ]
 
 let file_type_tests =
   [
@@ -101,7 +189,7 @@ let animation_test =
 let () = Sdlttf.init ()
 
 let new_font =
-  new_font_object "assets/FANTASY MAGIST.otf" "Hey" 20
+  new_font_object "assets/fantasy.otf" "Hey" 20
     { Sdlttf.r = 255; g = 0; b = 60; a = 240 }
 
 let font_tests =
@@ -131,8 +219,15 @@ let font_tests =
   ]
 
 let test_suite =
-  "Test suite for spritesheet, animation, and font functions"
+  "Test suite for spritesheet, animation, font, and audio functions. "
   >::: List.flatten
-         [ file_type_tests; get_image_format_tests; animation_test; font_tests ]
+         [
+           file_type_tests;
+           get_image_format_tests;
+           animation_test;
+           font_tests;
+           vector_test;
+           audio_test;
+         ]
 
 let () = run_test_tt_main test_suite
