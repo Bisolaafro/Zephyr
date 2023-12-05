@@ -2,11 +2,24 @@ open Level
 open Player
 open Textureloader
 open Consts
+open Spritesheet
 
 type t = {
   level : Level.t;
   player : Player.t;
 }
+
+let sprite_rows = 3
+let sprite_cols = 6
+let sprite_width = 115
+let sprite_height = 220
+let sprite_speed = 2.0
+let row_space = 3
+let col_space = 2
+
+let spritesheet =
+  new_spritesheet "assets/childsprite.png" sprite_rows sprite_cols sprite_width
+    sprite_height 0 0 (sprite_cols - 1) 5
 
 let new_level_loader () = { level = new_level (); player = new_player () }
 
@@ -14,6 +27,12 @@ let init_level_loader file r t =
   let caml = load_texture "assets/caml-export.png" PNG r in
   let x, y = (300., 300.) in
   init_player caml (x, y) (x +. 132., y +. 87.) t.player;
+  init_level file t.player r t.level
+
+let init_animated_level_loader file r t =
+  let boy = load_image r spritesheet in
+  let x, y = (100., 100.) in
+  init_player boy (x, y) (x +. 100., y +. 120.) t.player;
   init_level file t.player r t.level
 
 let update_level_loader_state k dt r t =
@@ -31,3 +50,4 @@ let update_level_loader_state k dt r t =
       init_level lvl t.player r t.level
 
 let draw_level_loader r t = draw_level r t.level
+let draw_animated_level_loader r t dt = draw_level_animated r t.level dt

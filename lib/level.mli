@@ -16,3 +16,4 @@ val new_level : unit -> t
 val init_level : string -> Player.t -> Sdlrender.t -> t -> unit
 val update_level_state : Keyboard.t -> int -> t -> unit
 val draw_level : Sdlrender.t -> t -> unit
+val draw_level_animated : Sdlrender.t -> t -> int -> unit

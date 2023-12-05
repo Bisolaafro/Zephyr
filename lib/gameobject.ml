@@ -110,9 +110,9 @@ module GameObject = struct
     Sdlrender.copyEx r ~texture:(Option.get t.texture) ~src_rect
       ~dst_rect:(Option.get t.rect) ~angle:0.
       ~flip:
-        (if t.facing_back then Flip_None
+        (if t.facing_back then Flip_Horizontal
          else if flip <> None then Option.get flip
-         else Flip_Horizontal)
+         else Flip_None)
       ()
 
   let get_object row col width height row_space col_space r t =
@@ -127,5 +127,5 @@ module GameObject = struct
 
   let draw_animated_object row col width height row_space col_space r t =
     get_object row col width height row_space col_space r t;
-    draw_object r t
+    draw_object ?src:t.src_rect r t
 end

@@ -12,8 +12,6 @@ type t = {
   mutable vel_y : int option;
 }
 
-let quit_font () = Sdlttf.quit ()
-
 let new_font_object filename text font_size color =
   let font = Sdlttf.open_font ~file:filename ~ptsize:font_size in
   let w, h = Sdlttf.size_text font text in
@@ -29,6 +27,8 @@ let new_font_object filename text font_size color =
     vel_x = None;
     vel_y = None;
   }
+
+let quit_font () = Sdlttf.quit ()
 
 let load_font font_object =
   let font =
