@@ -4,8 +4,14 @@ open Final.Keyboard
 open Final.Consts
 open Final.Textureloader
 open Final.Levelloader
+open Final.Mixer
 
 let bg_rect = Rect.make4 ~x:0 ~y:0 ~w:width ~h:height
+
+(* AUDIO *)
+let _ = open_audio 44100 MIX_DEFAULT_FORMAT 2 2048
+let _ = allocate_channels 4
+let fx = [ Chunk.load_wav "assets/jump.wav" ]
 
 (* LEVEL *)
 (* let obj1 = GameObject.new_object () let obj2 = GameObject.new_object () *)
@@ -50,7 +56,7 @@ let init () =
 
   let bg = load_sprite_png r ~filename:bg_file in
 
-  init_animated_level_loader "1.json" r level_loader;
+  init_animated_level_loader "1.json" r level_loader fx;
 
   (r, bg)
 

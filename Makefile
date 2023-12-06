@@ -7,7 +7,7 @@ test:
 doc:
 	dune build @doc
 run:
-	OCAMLRUNPARAM=b dune exec bin/main.exe
+	OCAMLRUNPARAM=b dune exec bin/levelsprite.exe
 opendoc: doc
 	@bash opendoc.sh
 loc:

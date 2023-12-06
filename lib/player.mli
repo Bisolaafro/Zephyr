@@ -7,6 +7,7 @@ type t = {
   objy : Gameobject.GameObject.t;
   obj : Gameobject.GameObject.t;
   mutable jumped : bool;
+  mutable fx : Mixer.Chunk.t list;
 }
 
 (** Returns new player. *)
@@ -14,8 +15,15 @@ val new_player : unit -> t
 
 (** Initializes player with given texture.
     - Parameter [texture]: initial texture for the player.
-    - Parameter [player]: player. *)
-val init_player : Sdltexture.t -> float * float -> float * float -> t -> unit
+    - Parameter [player]: player.
+    - Paramater [ch]: list of sound effects that the player will use. *)
+val init_player :
+  Sdltexture.t ->
+  float * float ->
+  float * float ->
+  t ->
+  Mixer.Chunk.t list ->
+  unit
 
 (** Updates player state.
     - Parameter [keyboard]: keyboard to read state from.

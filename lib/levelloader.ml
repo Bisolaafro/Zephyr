@@ -23,16 +23,16 @@ let spritesheet =
 
 let new_level_loader () = { level = new_level (); player = new_player () }
 
-let init_level_loader file r t =
+let init_level_loader file r t fx =
   let caml = load_texture "assets/caml-export.png" PNG r in
   let x, y = (300., 300.) in
-  init_player caml (x, y) (x +. 132., y +. 87.) t.player;
+  init_player caml (x, y) (x +. 132., y +. 87.) t.player fx;
   init_level file t.player r t.level
 
-let init_animated_level_loader file r t =
+let init_animated_level_loader file r t fx =
   let boy = load_image r spritesheet in
   let x, y = (100., 100.) in
-  init_player boy (x, y) (x +. 100., y +. 120.) t.player;
+  init_player boy (x, y) (x +. 100., y +. 120.) t.player fx;
   init_level file t.player r t.level
 
 let update_level_loader_state k dt r t =

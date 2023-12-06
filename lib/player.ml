@@ -8,6 +8,7 @@ type t = {
   objy : GameObject.t;
   obj : GameObject.t;
   mutable jumped : bool;
+  mutable fx : Mixer.Chunk.t list;
 }
 
 let dx = 4.
@@ -23,11 +24,13 @@ let new_player () =
     objy = GameObject.new_object ();
     obj = GameObject.new_object ();
     jumped = false;
+    fx = [];
   }
 
-let init_player texture (x0, y0) (x1, y1) t =
+let init_player texture (x0, y0) (x1, y1) t ch =
   GameObject.init_object texture (x0, y0 +. 10.) (x1, y1 -. 10.) true t.objx;
   GameObject.init_object texture (x0 +. 10., y0) (x1 -. 10., y1) true t.objy;
+  t.fx <- ch;
   GameObject.init_object texture (x0, y0) (x1, y1) true t.obj
 
 let update_player_rects t =
@@ -63,23 +66,22 @@ let update_player_state k dt t =
   if query_key D k && not (query_key A k) then (
     t.obj.pos.x <- t.obj.pos.x +. dx;
     t.obj.vel.x <- dvx);
-  if query_key Space k = false then (
+  if not (query_key Space k) then (
     t.jumped <- false;
     t.obj.animated <- false);
-  if query_key Space k && t.obj.on_ground && t.jumped = false then (
+  if query_key Space k && t.obj.on_ground && not t.jumped then (
     t.obj.animated <- false;
     t.obj.vel.x <- 0.;
     t.obj.vel.y <- dvy;
     t.obj.on_ground <- false;
     t.jumped <- true);
-
   if query_key A k then (
     t.obj.animated <- true;
     t.obj.anim_name <- get_name anim_1);
   if query_key D k then (
     t.obj.animated <- true;
     t.obj.anim_name <- get_name anim_2);
-  if query_key A k = false && query_key D k = false then t.obj.animated <- false;
+  if (not (query_key A k)) && not (query_key D k) then t.obj.animated <- false;
   t.objx.pos.x <- t.obj.pos.x;
   t.objx.pos.y <- t.obj.pos.y +. 10.;
   t.objy.pos.x <- t.obj.pos.x +. 10.;
