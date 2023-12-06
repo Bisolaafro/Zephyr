@@ -126,6 +126,11 @@ val allocate_channels : int -> int
     return the current volume without making any changes.*)
 val volume : int -> int -> int
 
+(** [playing n] is [Some true] if there is a chunk currently playing in channel
+    [n], false otherwise. If [n] is greater than the current number of channels,
+    [playing n] is [None]. *)
+val playing : int -> bool option
+
 (** A ChannelTrackerType module provides functionality that allows the user to
     easily add sound effects to gameobjects by abstracting away the *)
 module type ChannelTrackerType = sig

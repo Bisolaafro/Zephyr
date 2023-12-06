@@ -11,7 +11,9 @@ let bg_rect = Rect.make4 ~x:0 ~y:0 ~w:width ~h:height
 (* AUDIO *)
 let _ = open_audio 44100 MIX_DEFAULT_FORMAT 2 2048
 let _ = allocate_channels 4
-let fx = [ Chunk.load_wav "assets/jump.wav" ]
+
+(* ADD HERE *)
+let fx = []
 
 (* LEVEL *)
 (* let obj1 = GameObject.new_object () let obj2 = GameObject.new_object () *)
