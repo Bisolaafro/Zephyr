@@ -28,3 +28,4 @@ val animation_table : (string, t) Hashtbl.t
 val animation : string -> int -> int -> int -> int -> int -> int -> t
 val anim_1 : t
 val anim_2 : t
+val anim_3 : t
