@@ -8,6 +8,7 @@ type t = {
   mutable background : Sdltexture.t option;
   mutable city : Sdltexture.t option;
   mutable label : Fonts.t option;
+  mutable title : Fonts.t option;
   mutable alpha_ctr : int;
   fx : Container.t;
   mutable dismissed : bool;
@@ -22,6 +23,7 @@ let new_main_menu () =
     background = None;
     city = None;
     label = None;
+    title = None;
     alpha_ctr = 0;
     fx = Container.empty ();
     dismissed = false;
@@ -29,18 +31,24 @@ let new_main_menu () =
   }
 
 let init_main_menu r t =
-  let bg, city, l =
+  let bg, city, l, ttl =
     ( load_texture main_menu_bg JPG r,
       load_texture "assets/nightcity.jpeg" JPG r,
       Fonts.new_font_object "assets/douar.ttf" "PRESS ENTER TO CONTINUE" 40
-        { Sdlttf.r = 255; g = 255; b = 255; a = 0 } )
+        { Sdlttf.r = 255; g = 255; b = 255; a = 0 },
+      Fonts.new_font_object "assets/douar.ttf" "CONCRETE HALLS" 120
+        { Sdlttf.r = 255; g = 255; b = 255; a = 255 } )
   in
   t.background <- Some bg;
   t.city <- Some city;
+  t.title <- Some ttl;
   t.label <- Some l;
   load_font l;
+  load_font ttl;
   let w, h = get_dims l in
   update_position ((width / 2) - (w / 2)) (height - 100) l;
+  let w, h = get_dims ttl in
+  update_position ((width / 2) - (w / 2)) (height - 700) ttl;
   Texture.set_blend_mode bg Blend;
   Texture.set_blend_mode city Blend
 
@@ -57,8 +65,11 @@ let is_dismissed t = t.dismissed
 let is_finished t = t.finished
 
 let draw_main_menu r t =
-  let bg, city, l =
-    (Option.get t.background, Option.get t.city, Option.get t.label)
+  let bg, city, ttl, l =
+    ( Option.get t.background,
+      Option.get t.city,
+      Option.get t.title,
+      Option.get t.label )
   in
   let float_ctr = float_of_int t.alpha_ctr in
   if t.dismissed then begin
@@ -69,8 +80,18 @@ let draw_main_menu r t =
          in
          if alpha >= 0 then alpha else 0)
   end;
+  let alpha_title =
+    if t.dismissed then
+      int_of_float ((1. -. ((float_ctr /. 1000.) ** 2.)) *. 255.)
+    else 255
+  in
   Texture.set_alpha_mod city ~alpha:(if float_ctr >= 2800. then 255 else 0);
   Render.copy r ~texture:bg ~src_rect ~dst_rect ();
+  static_render_alpha r
+    ~alpha:
+      (let alpha = alpha_title in
+       if alpha >= 0 then alpha else 0)
+    ttl;
   if not t.dismissed then
     static_render_alpha r
       ~alpha:
