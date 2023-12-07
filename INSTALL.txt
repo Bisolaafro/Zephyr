@@ -1,39 +1,70 @@
-The Zephyr game engine requires four major dependencies to work properly.
-It needs:
- - openGL
- - SDL2
- - OcamlSDL2
- - OcamlSdlImage.
+INSTALLATION
 
-Before proceeding with the installation of those libraries, use the command 
- $ sudo apt-get update
-Usually, this solves some issues that arise when trying to install the libraries.
+The Zephyr game engine requires several dependencies to run. Some of them 
+are specific to ocaml, while the others are required for SDL, which pretty much 
+everything relies on. The Ocaml dependencies and their versions are the following: 
+ - ocamlsdl2            0.04
+ - ocamlsdl2-image      0.01
+ - ocamlsdl2-ttf        0.02
+ - tsdl                 1.0.0
+ - tsdl-mixer           0.6
+ - yojson               2.1.0 
 
-To install openGL, use the command
- $ apt install mesa-utils libglu1-mesa-dev freeglut3-dev mesa-common-dev
-To test that this works properly, run the command
- $ glxgears
-If the installation was successful, some spinning gears should display on screen.
-
-We assume that the user is using some sort of Debian, Ubuntu, 
-or any derivative Linux distributions (so this guide also works 
-for wsl2, assuming such a distro is used.) In addition, if you 
-are using Windows 10, please see the guide at 
-https://gist.github.com/Mluckydwyer/8df7782b1a6a040e5d01305222149f3c#2-window-server 
-to install a window server. This should not be necessary if you are using Windows 11.
-
-To install SDL2, run the command
- $ sudo apt-get install libsdl2-2.0-0
-
-Finally, Zephyr is known to work with version 5.0.0 of the Ocaml compiler,
-(i.e. the one currently used in CS3110), so please make sure this is the version
-you are using.
-
-To install SDL2 and the SDL2 image bindings, use the following commands
+In addition, we are compiler version 5.0.0 in our project, 
+which is the one currently used in class. Further, s of 12/0/23, opam will install the 
+above packages with the right version, so using the following commands should suffice.
  $ opam install ocamlsdl2
  $ opam install ocamlsdl2-image
+ $ opam install ocamlsdl2-ttf
+ $ opam install tsdl
+ $ opam install tsdl-mixer
+ $ opam install yojson
 
-Finally, to build the game and play it use the commands
+However, if the right version is not installed, you can try using, for example,
+ $ opam install "ocamlsdl2=0.04"
+This tells opam to install the version number after the equal sign. 
+
+Finally, our project depends entirely on SDL2, so you will need to install it. 
+Two of the team members are running WSL2 and Ubuntu 22.04.3 and one is 
+running MacOS. If you have never installed SDL2, running the command 
+ $ opam install ocamlsdl2
+should have prompted you to also install SDL2. If this was not the case, 
+the command that the Ubuntu users used to install it was 
+ $ apt-get install libsdl2-dev
+On a technical note, this installed the following version of SDL2 and extra 
+packages (such as sdl_mixer) that are installed when using the above command
+
+The last one, yojson, may or may not be already installed on your system, 
+ libsdl2-2.0-0:amd64               2.0.20+dfsg-2ubuntu1.22.04.1
+ libsdl2-dev:amd64                 2.0.20+dfsg-2ubuntu1.22.04.1
+ libsdl2-image-dev:amd64           2.0.5+dfsg1-3build1
+ libsdl2-mixer-2.0-0:amd64         2.0.4+dfsg1-4build1
+ libsdl2-mixer-dev:amd64           2.0.4+dfsg1-4build1
+ libsdl2-ttf-2.0-0:amd64           2.0.18+dfsg-2
+ libsdl2-ttf-dev:amd64             2.0.18+dfsg-2  
+
+Crucially, note that the SDL2 version shown above is 2.0.20, which is the version 
+our project is known to work with. 
+
+As a side note, for most of the duration of the project, all 
+team members used Windows machines with WSL2. However, a team member's 
+computer got broken and started using a Mac. When running the 
+installation command for ocamlsdl2, SDL2 version 2.28.5 was installed, but 
+we are not sure that the project works with other versions of SDL2. 
+
+After everything is installed, you can build the project with
  $ make build
+and run it with 
  $ make run
 
+MISCELLANEOUS
+
+To run the testing script, you can use the command
+ $ make test
+Note that we used the OUnit2 package for this, but this is standard in the class 
+so we didn't show how to install it. 
+
+To generate the documentation using odoc, use the command
+$ make code
+which you can open with 
+ $ make opendoc

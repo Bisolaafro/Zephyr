@@ -64,6 +64,13 @@ let test_float name x y e =
   assert_equal x y ~printer:string_of_float ~cmp:(fun x y ->
       Float.abs (x -. y) < e)
 
+(** [assert_int name x y] is the [OUnit2.test] that verifies that [x=y]. *)
+let assert_int name x y =
+  name >:: fun _ -> assert_equal x y ~printer:string_of_int
+
+(** [Chunk.t] object used for testing *)
+let ch = Final.Mixer.Chunk.load_wav "assets/exterior_fx.wav"
+
 let audio_test =
   [
     test_audio_loader "Loading rain_on_brick" "assets/rain_on_brick.mp3";
@@ -116,6 +123,39 @@ let vector_test =
     (let v = { x = 0.0; y = 0.0 } in
      test_float "length of 0 vector is 0. " 0. (v |> length) 0.0001);
   ]
+
+let container_tests =
+  Final.Container.
+    [
+      assert_int "size of empty container is 0" 0 (empty () |> size);
+      (let con = empty () in
+       add ch con;
+       let size = size con in
+       assert_int "size of container with 1 song is 1" 1 size);
+      (let con = empty () in
+       add ch con;
+       ignore (alternate con);
+       let size = size con in
+       assert_int "calling alternate should not change size" 1 size);
+      (let con = empty () in
+       add_from_list [ ch; ch; ch ] con;
+       let size = size con in
+       assert_int "testing using from_list function on non empty list" 3 size);
+      (let con = empty () in
+       add_from_list [] con;
+       let size = size con in
+       assert_int "testing using from_list function on empty list" 0 size);
+      (let con = empty () in
+       add_from_list [ ch; ch; ch ] con;
+       add ch con;
+       let size = size con in
+       assert_int "using list to add to container and directly adding" 4 size);
+      (let con = empty () in
+       add_from_list [ ch ] con;
+       "testing that alternate with one element returns the same element \
+        (physical equality)"
+       >:: fun _ -> assert_equal ch (alternate con) ~cmp:Stdlib.( == ));
+    ]
 
 let file_type_tests =
   [
@@ -228,6 +268,7 @@ let test_suite =
            font_tests;
            vector_test;
            audio_test;
+           container_tests;
          ]
 
 let () = run_test_tt_main test_suite

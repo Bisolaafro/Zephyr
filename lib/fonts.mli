@@ -17,6 +17,9 @@ val load_font : t -> unit
 (** renders the text using the font to the screen. *)
 val static_render : Sdltype.renderer -> t -> unit -> unit
 
+(** renders the text using the font and the given alpha value to the screen. *)
+val static_render_alpha : Sdltype.renderer -> alpha:int -> t -> unit
+
 (** updates the position of the text on the screen
     - Parameter [x] - the starting x position of the text
     - Parameter [y] - the starting y position of the text
@@ -27,6 +30,9 @@ val update_position : int -> int -> t -> unit
     being the velocity in the x direction and the second element being the
     velocity in the y direction.*)
 val get_speed : t -> int option * int option
+
+(** Returns the dimensions of the font surface as a tuple of integers. *)
+val get_dims : t -> int * int
 
 (** returns the color of the text*)
 val get_color : t -> Sdlttf.color

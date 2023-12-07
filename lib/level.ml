@@ -165,6 +165,8 @@ let spritesheet =
 let old_anim = ref ""
 
 let draw_level_animated r t dt =
+  Render.copy r ~texture:(Option.get t.background) ~src_rect:bg_rect
+    ~dst_rect:bg_rect ();
   let player = Option.get t.player in
   let anim, name = get_anim player in
   if anim then (

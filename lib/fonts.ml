@@ -46,10 +46,21 @@ let static_render renderer font_object =
   Render.copy renderer ~texture:tex ~src_rect:font_object.src_rect
     ~dst_rect:(Option.get font_object.dst_rect)
 
+let static_render_alpha renderer ~alpha font_object =
+  let tex =
+    Texture.create_from_surface renderer (Option.get font_object.surface)
+  in
+  Texture.set_blend_mode tex Blend;
+  Texture.set_alpha_mod tex alpha;
+  Render.copy renderer ~texture:tex ~src_rect:font_object.src_rect
+    ~dst_rect:(Option.get font_object.dst_rect)
+    ()
+
 let update_position x y font_object =
   let w, h = Surface.get_dims (Option.get font_object.surface) in
   font_object.dst_rect <- Some (Sdlrect.make4 ~x ~y ~w ~h)
 
+let get_dims font_object = Surface.get_dims (Option.get font_object.surface)
 let get_speed font_object = (font_object.vel_x, font_object.vel_y)
 let get_color font_object = font_object.color
 let get_text font_object = font_object.text

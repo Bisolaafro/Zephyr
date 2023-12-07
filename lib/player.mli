@@ -7,7 +7,7 @@ type t = {
   objy : Gameobject.GameObject.t;
   obj : Gameobject.GameObject.t;
   mutable jumped : bool;
-  mutable fx : Mixer.Chunk.t list;
+  fx : Container.t;
 }
 
 (** Returns new player. *)

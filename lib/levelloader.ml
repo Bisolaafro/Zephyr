@@ -31,7 +31,7 @@ let init_level_loader file r t fx =
 
 let init_animated_level_loader file r t fx =
   let boy = load_image r spritesheet in
-  let x, y = (100., 100.) in
+  let x, y = (100., 500.) in
   init_player boy (x, y) (x +. 100., y +. 120.) t.player fx;
   init_level file t.player r t.level
 

@@ -186,6 +186,11 @@ let play_channel c chunk l =
 let allocate_channels = Tsdl_mixer.Mixer.allocate_channels
 let volume = Tsdl_mixer.Mixer.volume
 
+let playing n =
+  let num_chans = allocate_channels ~-1 in
+  if n >= 0 && n < num_chans - 1 then Some (Tsdl_mixer.Mixer.playing (Some n))
+  else None
+
 let open_audio freq format chan chunk =
   ignore
     (Tsdl_mixer.Mixer.open_audio freq (my_format_to_tsdl format) chan chunk)

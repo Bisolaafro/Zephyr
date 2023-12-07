@@ -8,7 +8,7 @@ type t = {
   objy : GameObject.t;
   obj : GameObject.t;
   mutable jumped : bool;
-  mutable fx : Mixer.Chunk.t list;
+  fx : Container.t;
 }
 
 let dx = 4.
@@ -24,13 +24,13 @@ let new_player () =
     objy = GameObject.new_object ();
     obj = GameObject.new_object ();
     jumped = false;
-    fx = [];
+    fx = Container.empty ();
   }
 
 let init_player texture (x0, y0) (x1, y1) t ch =
   GameObject.init_object texture (x0, y0 +. 10.) (x1, y1 -. 10.) true t.objx;
   GameObject.init_object texture (x0 +. 10., y0) (x1 -. 10., y1) true t.objy;
-  t.fx <- ch;
+  Container.add_from_list ch t.fx;
   GameObject.init_object texture (x0, y0) (x1, y1) true t.obj
 
 let update_player_rects t =
