@@ -4,9 +4,23 @@ open Final.Keyboard
 open Final.Consts
 open Final.Textureloader
 open Final.Levelloader
+open Final.Mixer
+open Final.Mainmenu
+open Final.Fonts
+
+type state =
+  | MainMenu
+  | Active
+
+(* AUDIO *)
+let _ = open_audio 44100 MIX_DEFAULT_FORMAT 2 2048
+let _ = allocate_channels 4
+let state = ref MainMenu
+let fx = [ Chunk.load_wav "assets/jump.wav" ]
 
 (* LEVEL *)
 let level_loader = new_level_loader ()
+let main_menu = new_main_menu ()
 
 (* KEYBOARD *)
 let keyboard = new_keyboard
@@ -27,28 +41,39 @@ let quit_game () =
 (* UPDATE GAME *)
 let update_state r dt =
   if query_key Esc keyboard then quit_game ();
-  update_level_loader_state keyboard dt r level_loader
+  match !state with
+  | MainMenu ->
+      update_main_menu_state keyboard dt r main_menu;
+      if query_key EnterMain keyboard then state := Active
+  | Active -> update_level_loader_state keyboard dt r level_loader
 
 (* INITIALIZE GAME *)
 let init () =
   Sdl.init [ `EVERYTHING ];
   Sdlimage.init [ `PNG ];
+  Sdlttf.init ();
   let window =
     Window.create ~pos:(`centered, `centered) ~dims:(width, height)
-      ~title:"Polaris" ~flags:[ Window.FullScreen ]
+      ~title:"Concrete Halls" ~flags:[ Window.FullScreen ]
   in
   let r =
     Render.create_renderer ~win:window ~index:(-1)
       ~flags:[ Render.PresentVSync ]
   in
-  init_level_loader "1.json" r level_loader;
+  init_animated_level_loader "1.json" r level_loader fx;
+  init_main_menu r main_menu;
+  Mouse.show_cursor ~toggle:false;
   r
 
 (* DRAW GAME *)
-let draw r =
+let draw r dt =
   Render.clear r;
   Render.set_scale r (1.0, 1.0);
-  draw_level_loader r level_loader;
+  begin
+    match !state with
+    | MainMenu -> draw_main_menu r main_menu
+    | Active -> draw_animated_level_loader r level_loader dt
+  end;
   Render.render_present r
 
 (* GAME LOOP *)
@@ -59,7 +84,7 @@ let () =
     let dt = t - last_t in
     event_loop ();
     update_state r dt;
-    draw r;
+    draw r dt;
     main_loop t
   in
   main_loop (Timer.get_ticks ())
