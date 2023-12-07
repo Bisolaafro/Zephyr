@@ -38,9 +38,7 @@ let new_level () =
 
 let init_level file player r t =
   let lvl_json = "level/" ^ file |> Yojson.Basic.from_file in
-  let tilemap_file =
-    "level/tilemap/" ^ (lvl_json |> member "tilemap" |> to_string)
-  in
+  let tilemap_file = "level/" ^ (lvl_json |> member "tilemap" |> to_string) in
   (* let pos = lvl_json |> member "player_pos" in let x, y = (pos |> member "x"
      |> to_float, pos |> member "y" |> to_float) in *)
   let next = lvl_json |> member "next_lvl" |> to_string in

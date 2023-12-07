@@ -64,7 +64,7 @@ let init () =
     Render.create_renderer ~win:window ~index:(-1)
       ~flags:[ Render.PresentVSync ]
   in
-  init_animated_level_loader "1.json" r level_loader fx;
+  init_animated_level_loader "surface-1-linker.json" r level_loader fx;
   init_main_menu r main_menu;
   Mouse.show_cursor ~toggle:false;
   r
