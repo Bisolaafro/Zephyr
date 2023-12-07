@@ -1,0 +1,7 @@
+The following assets were used in the creating of this game. Their licenses
+allow us to use the assets on non-commercial projects.
+
+https://free-game-assets.itch.io/free-scrolling-city-backgrounds-pixel-art
+https://free-game-assets.itch.io/free-industrial-zone-tileset-pixel-art
+https://ansimuz.itch.io/industrial-parallax-background
+
