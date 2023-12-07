@@ -81,7 +81,9 @@ let update_player_state k dt t =
   if query_key D k then (
     t.obj.animated <- true;
     t.obj.anim_name <- get_name anim_2);
-  if (not (query_key A k)) && not (query_key D k) then t.obj.animated <- false;
+  if (not (query_key A k)) && not (query_key D k) then (
+    t.obj.animated <- true;
+    t.obj.anim_name <- get_name anim_3);
   t.objx.pos.x <- t.obj.pos.x;
   t.objx.pos.y <- t.obj.pos.y +. 10.;
   t.objy.pos.x <- t.obj.pos.x +. 10.;

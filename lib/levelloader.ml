@@ -9,16 +9,16 @@ type t = {
   player : Player.t;
 }
 
-let sprite_rows = 3
-let sprite_cols = 6
-let sprite_width = 115
-let sprite_height = 220
+let sprite_rows = 12
+let sprite_cols = 8
+let sprite_width = 24
+let sprite_height = 48
 let sprite_speed = 2.0
-let row_space = 3
-let col_space = 2
+let row_space = 0
+let col_space = 24
 
 let spritesheet =
-  new_spritesheet "assets/childsprite.png" sprite_rows sprite_cols sprite_width
+  new_spritesheet "assets/punkgirly.png" sprite_rows sprite_cols sprite_width
     sprite_height 0 0 (sprite_cols - 1) 5
 
 let new_level_loader () = { level = new_level (); player = new_player () }
@@ -32,7 +32,7 @@ let init_level_loader file r t fx =
 let init_animated_level_loader file r t fx =
   let boy = load_image r spritesheet in
   let x, y = (100., 500.) in
-  init_player boy (x, y) (x +. 100., y +. 120.) t.player fx;
+  init_player boy (x, y) (x +. 90., y +. 110.) t.player fx;
   init_level file t.player r t.level
 
 let update_level_loader_state k dt r t =
