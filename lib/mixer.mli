@@ -67,6 +67,11 @@ module type MusicModType = sig
       will simply default to [128]. Passing a negative number will simply return
       the current volume without changing it. *)
   val music_vol : int -> int
+
+  (** [fade_out_music ms] halts the music stream after fading it out for a
+      specified time [ms] in milliseconds. The function returns [None] if there
+      is currently no music being played, [Some ()] otherwise. Requires: [ms>0] *)
+  val fade_out_music : int -> unit option
 end
 
 (** Implementation of MusicModType *)

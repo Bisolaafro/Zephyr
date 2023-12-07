@@ -69,6 +69,7 @@ module type MusicModType = sig
   val free_music : t -> unit
   val load_music : string -> t
   val music_vol : int -> int
+  val fade_out_music : int -> unit option
 end
 
 module type ChunkModType = sig
@@ -108,6 +109,11 @@ module Music : MusicModType = struct
     | Error (`Msg str) -> raise (ReadError str)
 
   let music_vol = Tsdl_mixer.Mixer.volume_music
+
+  let fade_out_music ms =
+    match Tsdl_mixer.Mixer.fade_out_music ms with
+    | Ok _ -> Some ()
+    | Error _ -> None
 end
 
 (* End of Music implementation*)
