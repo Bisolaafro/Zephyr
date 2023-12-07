@@ -7,12 +7,66 @@ open Sdl
 open Final.Vector
 open Final.Mixer
 
-(** TODO: WRITE A TEST PLAN -4: The test plan is missing. -1: The test plan does
-    not explain which parts of the system were automatically tested by OUnit vs.
-    manually tested. -1: The test plan does not explain what modules were tested
-    by OUnit and how test cases were developed (black box, glass box,
-    randomized, etc.). -1: The test plan does not provide an argument for why
-    the testing approach demonstrates the correctness of the system*)
+(** TESTING PLAN:
+    - OUnit tests: We mostly tested functions that had to with I/O operations as
+      well as the logic for displaying animations and playing audio. The
+      functions in the [Mixer]/[Container] modules were tested only with respect
+      to being to properly load audio files. It would've been impossible to test
+      that the right effect was being played with OUnit2 tests. Note that the
+      testing of this file reading-functionaly was almost entirely glass-box, as
+      the code for these modules consisted heavily of wrapping around the more
+      complex functionality provided by the [Ocamlsdl2] and [Tsdl_mixer]
+      libraries.
+
+    - In addition, we tested the functions in the simple [Vector] module, which
+      had only a few functions but for which we could build a more robust
+      testing suite. This was done with glass-box testing in mind, as we were
+      pretty confident that the implementation was correct.
+
+    - We also tested the back-end logic for animations thoroughly with OUnit
+      tests, this was done to ensure that the [Spritesheet] and [Animations]
+      modules correctly represented the rows and columns of a given png image
+      with multiple animation stages. Note that these tests also provide
+      coverage for the [Textureloader] module, which is used to load image. The
+      testing for this part of the code was done against the implementation, as
+      this provided a guarantee that the logic itself worked properly.
+
+    - We also tested some of the functionality of the [Font] module, such as the
+      speed and color of the font using [OUnit2] tests. The testing suite for
+      the module consists largely of glass-box tests. As was the case with
+      [Mixer]/[Container], this module wrapped around the [sdl2_ttf] library,
+      which is what does the heavy lifting.
+
+    - In summary, the following modules were tested using [OUnit2]:
+    - Mixer
+    - Container
+    - Vector
+    - Textureloader
+    - Fonts
+    - Animations
+
+    - All remaining modules, as they largely consisted of direct interaction
+      with the player, were manually tested by the team members.
+
+    - We are confident that our testing strategy shows the proper
+      function/correctness of the components in the game and game engine we
+      built. For instance, we have very thoroughly tested that the features we
+      have implemented for I/O and user interaction work as expected, which has
+      given us more certainty that our system works as expected. The [OUnit2]
+      tests we developed provide even more evidence that our project has the
+      right functionality, as they tell us that the way in which we implemented
+      much of the logic in the game engine works properly.
+
+    - However, no test suite is perfect. We did find some issues that we believe
+      go beyond what we have coded, such as some unexpected behavior that arises
+      when using the sdl bindings. For instance, loading certain audio files
+      makes the system crash due to a segmentation fault. The code in [Mixer] is
+      designed to handle exceptions that are raised by the underlying libraries,
+      however, the error that is raised is not an ocaml exception, but some sort
+      of system failure.
+
+    - In all, the testing we have done gives us a strong guarantee that our
+      system should work under normal circumstances. *)
 
 (* AUDIO INITIALIZATION. *)
 let _ = init [ MP3 ]
