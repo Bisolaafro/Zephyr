@@ -17,6 +17,7 @@ let _ = open_audio 44100 MIX_DEFAULT_FORMAT 2 2048
 let _ = allocate_channels 4
 let state = ref MainMenu
 let fx = [ Chunk.load_wav "assets/jump.wav" ]
+let select = Chunk.load_wav "assets/select.wav"
 
 (* LEVEL *)
 let level_loader = new_level_loader ()
@@ -44,7 +45,10 @@ let update_state r dt =
   match !state with
   | MainMenu ->
       update_main_menu_state keyboard dt r main_menu;
-      if query_key EnterMain keyboard then state := Active
+      if query_key EnterMain keyboard && not (is_dismissed main_menu) then (
+        play_channel (-1) select 0;
+        dismiss main_menu);
+      if is_finished main_menu then state := Active
   | Active -> update_level_loader_state keyboard dt r level_loader
 
 (* INITIALIZE GAME *)
