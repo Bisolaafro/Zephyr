@@ -19,6 +19,7 @@ let state = ref MainMenu
 let fx = [ Chunk.load_wav "assets/jump.wav" ]
 let select = Chunk.load_wav "assets/select.wav"
 let call = Music.load_music "assets/call1.wav"
+let main_enabled = true
 
 (* LEVEL *)
 let level_loader = new_level_loader ()
@@ -42,6 +43,7 @@ let quit_game () =
 
 (* UPDATE GAME *)
 let update_state r dt =
+  if not main_enabled then state := Active;
   if query_key Esc keyboard then quit_game ();
   match !state with
   | MainMenu ->
