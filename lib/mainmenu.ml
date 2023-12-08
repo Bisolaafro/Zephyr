@@ -32,7 +32,7 @@ let new_main_menu () =
 
 let init_main_menu r t =
   let bg, city, l, ttl =
-    ( load_texture main_menu_bg JPG r,
+    ( load_texture "assets/city.jpeg" JPG r,
       load_texture "assets/nightcity.jpeg" JPG r,
       Fonts.new_font_object "assets/douar.ttf" "PRESS ENTER TO CONTINUE" 40
         { Sdlttf.r = 255; g = 255; b = 255; a = 0 },

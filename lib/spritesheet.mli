@@ -1,45 +1,35 @@
+(** Spritesheet module. Provides a type and functions to manage and draw
+    animated textures from spritesheets. *)
+
 open Textureloader
 
-(** Creates a Spritesheet that can be used on a player/object for animation*)
-
-(**Represents a Spritesheet*)
+(** Represents a spritesheet. *)
 type t
 
-(**Returns the image format corresponding to the given string
-   - Parameter [str] - the str to be converted*)
+(** [get_image_format ext] returns the image format corresponding to the file
+    extension [ext]. *)
 val get_image_format : string -> image_format
 
-(** Returns a new Spritesheet
-    - Parameter [filename] : path of the image file
-    - Parameter [rows] : number of rows to animate in the spritesheet
-    - Parameter [cols] : number of columns in the spritesheet
-    - Parameter [width] : width of a sprite
-    - Parameter [height] : height of a sprite
-    - Parameter [row_start] : starting row of the animation
-    - Parameter [col_start] : starting column of the animation
-    - Parameter [col_end] : ending column of the animation
-    - Parameter [speed] : speed to animate at, increasing speed results in less
-      frames per second*)
+(** [new_spritesheet fl r c w h rs cs ce sp] returns a new spritesheet from the
+    file [fl], with rows [r], columns [c], sprite width [w], height [h], whose
+    first sprite is the one at row [rs], column [cs], and whose last sprite is
+    the one at column [cs], with sprites changing every [sp] milliseconds. *)
 val new_spritesheet :
   string -> int -> int -> int -> int -> int -> int -> int -> int -> t
 
-(**Returns the string format of the file type given
-   - Parameter [file] - the file path given*)
+(** [file_type fl] returns the file extension of the file [fl]. *)
 val file_type : string -> string
 
 (*Loads the image file as a texture - Paramter [renderer] : the renderer to draw
   on - Parameter [sheet] : the spritesheet*)
 val load_image : Sdltype.renderer -> t -> Sdltexture.t
 
-(** Gets the row and col of the current sprite in the sheet
-    - Parameter [sheet] : the spritesheet
-    - Parameter [dt] : time elapsed since initialization of the game
-    - Parameter [anim] : whether or not to change frames*)
+(** [update_sprite_index sheet dt check] updates the sprite of the spritesheet
+    [sheet] considering the time [dt] elapsed since the last frame if [check] is
+    true, and returns a tuple indicating the row and column of the current
+    sprite. *)
 val update_sprite_index : t -> int -> bool -> int * int
 
-(** takes in the animation specified and updates the spritesheet to animate with
-    the animation's rows, cols, row_start, col_start, col_end, and speed
-    - Parameter [t] : the spritesheet
-    - Parameter [animation] : the current animation
-    - Parameter [check] : whether to update the animation*)
+(** [update_animations sheet anim check] updates the spritesheet [sheet] with
+    the properties of animation [anim] if [check] is true. *)
 val update_animations : t -> Animations.t -> bool -> unit

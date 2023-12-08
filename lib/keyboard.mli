@@ -15,12 +15,8 @@ type key = Key.key
 (** Returns new keyboard state with all keys initialized to false. *)
 val new_keyboard : t
 
-(** Updates keyboard.
-    - Parameter [event]: event to update keyboard with.
-    - Parameter [keyboard]: keyboard. *)
+(** [update_keyboard e k] updates keyboard [k] with SDL event [e]. *)
 val update_keyboard : Sdlevent.t -> t -> unit
 
-(** Returns whether a key is pressed in a keyboard.
-    - Parameter [key]: key to query.
-    - Parameter [keyboard]: keyboard. *)
+(** [query_key key k] returns whether a key [key] is pressed in a keyboard [k]. *)
 val query_key : key -> t -> bool

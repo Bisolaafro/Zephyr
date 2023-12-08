@@ -1,7 +1,7 @@
-(** Module that facilitates loading of texture from images, using SDLImage
-    bindings to do so. *)
+(** Textureloader module. Facilitates loading textures from images using
+    SDLImage bindings. *)
 
-(** File formats that this module supports. *)
+(** Supported file formats. *)
 type image_format =
   | PNG
   | JPG
@@ -18,7 +18,7 @@ type image_format =
   | XV
   | WEBP
 
-(** [load_texture name format rend] creates a texture using the renderer [ren].
-    The picture is initialized from an [image] file name. Requires: the file
-    extension of the image referenced in [name] must match that of [format].*)
+(** [load_texture fl format rndr] creates a texture using the renderer [rndr].
+    The picture is initialized from an [fl] file name. Requires: the file
+    extension of the image referenced in [fl] must match that of [format].*)
 val load_texture : string -> image_format -> Sdlrender.t -> Sdltexture.t

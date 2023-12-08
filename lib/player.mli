@@ -10,13 +10,11 @@ type t = {
   fx : Container.t;
 }
 
-(** Returns new player. *)
+(** [new_player ()] returns a new player. *)
 val new_player : unit -> t
 
-(** Initializes player with given texture.
-    - Parameter [texture]: initial texture for the player.
-    - Parameter [player]: player.
-    - Paramater [ch]: list of sound effects that the player will use. *)
+(** [init_player tx p fx] initializes a player [p] with texture [tx] and sound
+    effects [fx]. *)
 val init_player :
   Sdltexture.t ->
   float * float ->
@@ -25,27 +23,24 @@ val init_player :
   Mixer.Chunk.t list ->
   unit
 
-(** Updates player state.
-    - Parameter [keyboard]: keyboard to read state from.
-    - Parameter [dt]: time elapsed since last update.
-    - Parameter [player]: player. *)
+(** [update_player_state k dt p] updates the state of player [p] given the time
+    [dt] elapsed since the last frame and the keyboard state [k]. *)
 val update_player_state : Keyboard.t -> int -> t -> unit
 
+(** [update_player_rects p] is a high-performing function that updates the
+    positions of the rectangles representing the player's collision logic
+    without updating the player's position or velocity. *)
 val update_player_rects : t -> unit
 
-(** Draws player to renderer.
-    - Parameter [renderer]: renderer to draw on.
-    - Parameter [player]: player. *)
+(** [get_anim p] returns a tuple representing whether player [p] is animated and
+    if so, the name of its animation. If [p] is not animated, the name of its
+    animation is an empty string. *)
 val get_anim : t -> bool * string
 
+(** [draw_player rndr p] draws a player [p] to renderer [rndr]. *)
 val draw_player : Sdlrender.t -> t -> unit
 
-(** draws an animated player by changing frames
-    - Parameter [row] : current row of the sprite in the spritesheet
-    - Parameter [col] : current column of the sprite in the spritesheet
-    - Parameter [width] : width of the sprite
-    - Parameter [height] : height of the sprite
-    - Parameter [renderer] : renderer to draw on
-    - Parameter [player] : player*)
+(** [draw_animated_player r c w h rndr p] draws an animated player [p] to
+    renderer [rndr] with the sprite at [r], [c] of width [w] and height [h]. *)
 val draw_animated_player :
   int -> int -> int -> int -> int -> int -> Sdltype.renderer -> t -> unit
