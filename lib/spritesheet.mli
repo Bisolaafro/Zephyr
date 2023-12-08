@@ -20,8 +20,8 @@ val new_spritesheet :
 (** [file_type fl] returns the file extension of the file [fl]. *)
 val file_type : string -> string
 
-(*Loads the image file as a texture - Paramter [renderer] : the renderer to draw
-  on - Parameter [sheet] : the spritesheet*)
+(** Loads the image file as a texture - Paramter [renderer] : the renderer to
+    draw on - Parameter [sheet] : the spritesheet. *)
 val load_image : Sdltype.renderer -> t -> Sdltexture.t
 
 (** [update_sprite_index sheet dt check] updates the sprite of the spritesheet
