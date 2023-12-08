@@ -1,0 +1,10 @@
+{
+    "next_lvl": "staircase.json",
+    "prev_lvl": "extraction.json",
+    "player_pos": {
+        "x": 100.0,
+        "y": 300.0
+    },
+    "tilemap": "control.json",
+    "background": "assets/background.png"
+}
