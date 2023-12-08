@@ -6,5 +6,5 @@
         "y": 300.0
     },
     "tilemap": "b2-levels/b2-4.json",
-    "background": "assets/background.png"
+    "background": "assets/backgrounds/surf-background.png"
 }
