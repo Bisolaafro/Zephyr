@@ -18,8 +18,9 @@ let _ = allocate_channels 4
 let state = ref MainMenu
 let fx = [ Chunk.load_wav "assets/jump.wav" ]
 let select = Chunk.load_wav "assets/select.wav"
+let ambient = Music.load_music "assets/wind.wav"
 let call = Music.load_music "assets/call1.wav"
-let main_enabled = false
+let main_enabled = true
 
 (* LEVEL *)
 let level_loader = new_level_loader ()
@@ -50,6 +51,8 @@ let update_state r dt =
       update_main_menu_state keyboard dt r main_menu;
       if query_key EnterMain keyboard && not (is_dismissed main_menu) then (
         play_channel (-1) select 0;
+        ignore (Music.fade_out_music 100);
+        if Music.music_vol (-1) <= 32 then Music.free_music ambient;
         Music.play_music call 0;
         dismiss main_menu);
       if is_finished main_menu then state := Active
@@ -68,9 +71,10 @@ let init () =
     Render.create_renderer ~win:window ~index:(-1)
       ~flags:[ Render.PresentVSync ]
   in
-  init_animated_level_loader "b2-1-linker.json" r level_loader fx;
+  init_animated_level_loader "surface-1-linker.json" r level_loader fx;
   init_main_menu r main_menu;
   Mouse.show_cursor ~toggle:false;
+  Music.play_music ambient 0;
   r
 
 (* DRAW GAME *)
