@@ -43,11 +43,13 @@ let update_level_loader_state k dt r t =
     | This -> None
     | Next -> t.level.next_level
   in
-  match lvl_opt with
-  | None -> ()
-  | Some lvl ->
-      t.level.state <- This;
-      init_level lvl t.player r t.level
+  begin
+    match lvl_opt with
+    | None -> ()
+    | Some lvl ->
+        t.level.state <- This;
+        init_level lvl t.player r t.level
+  end
 
 let draw_level_loader r t = draw_level r t.level
 let draw_animated_level_loader r t dt = draw_level_animated r t.level dt

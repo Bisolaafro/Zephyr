@@ -1,6 +1,8 @@
 (** Player module. Includes functions to initialize, update state and draw a
     player. *)
 
+open Mixer
+
 (** Represents a player. *)
 type t = {
   objx : Gameobject.GameObject.t;
@@ -8,6 +10,7 @@ type t = {
   obj : Gameobject.GameObject.t;
   mutable jumped : bool;
   fx : Container.t;
+  sounds : (string, Chunk.t) Hashtbl.t;
 }
 
 (** [new_player ()] returns a new player. *)

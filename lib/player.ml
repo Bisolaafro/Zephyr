@@ -2,6 +2,7 @@ open Keyboard
 open Gameobject
 open Consts
 open Animations
+open Mixer
 
 type t = {
   objx : GameObject.t;
@@ -9,6 +10,7 @@ type t = {
   obj : GameObject.t;
   mutable jumped : bool;
   fx : Container.t;
+  sounds : (string, Chunk.t) Hashtbl.t;
 }
 
 let dx = 4.
@@ -25,13 +27,16 @@ let new_player () =
     obj = GameObject.new_object ();
     jumped = false;
     fx = Container.empty ();
+    sounds = Hashtbl.create 2;
   }
 
 let init_player texture (x0, y0) (x1, y1) t ch =
   GameObject.init_object texture (x0, y0 +. 10.) (x1, y1 -. 10.) true t.objx;
   GameObject.init_object texture (x0 +. 10., y0) (x1 -. 10., y1) true t.objy;
   Container.add_from_list ch t.fx;
-  GameObject.init_object texture (x0, y0) (x1, y1) true t.obj
+  GameObject.init_object texture (x0, y0) (x1, y1) true t.obj;
+  Hashtbl.add t.sounds "jump" (Chunk.load_wav "assets/jump2.wav");
+  Hashtbl.add t.sounds "death" (Chunk.load_wav "assets/death.wav")
 
 let update_player_rects t =
   t.obj.rect <-
@@ -74,6 +79,7 @@ let update_player_state k dt t =
     t.obj.vel.x <- 0.;
     t.obj.vel.y <- dvy;
     t.obj.on_ground <- false;
+    play_channel (-1) (Hashtbl.find t.sounds "jump") 0;
     t.jumped <- true);
   if query_key A k then (
     t.obj.animated <- true;
@@ -88,7 +94,12 @@ let update_player_state k dt t =
   t.objx.pos.y <- t.obj.pos.y +. 10.;
   t.objy.pos.x <- t.obj.pos.x +. 10.;
   t.objy.pos.y <- t.obj.pos.y;
-  t.obj.on_ground <- false
+  t.obj.on_ground <- false;
+  if t.obj.pos.y < 0. then (
+    let x, y = (100., 700.) in
+    play_channel (-1) (Hashtbl.find t.sounds "death") 0;
+    t.obj.pos.x <- x;
+    t.obj.pos.y <- y)
 
 let get_anim t = (t.obj.animated, t.obj.anim_name)
 let draw_player r t = GameObject.draw_object r t.obj
