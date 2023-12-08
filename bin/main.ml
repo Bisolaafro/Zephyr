@@ -19,7 +19,7 @@ let state = ref MainMenu
 let fx = [ Chunk.load_wav "assets/jump.wav" ]
 let select = Chunk.load_wav "assets/select.wav"
 let call = Music.load_music "assets/call1.wav"
-let main_enabled = true
+let main_enabled = false
 
 (* LEVEL *)
 let level_loader = new_level_loader ()

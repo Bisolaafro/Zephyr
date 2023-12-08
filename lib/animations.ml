@@ -20,9 +20,9 @@ let animation_table = Hashtbl.create 3
 let animation name row_start col_start col_end rows cols speed : t =
   { name; row_start; col_start; col_end; rows; cols; speed }
 
-let anim_1 = animation "run" 4 0 5 1 6 4
-let anim_2 = animation "run2" 4 0 5 1 6 4
-let anim_3 = animation "idle" 8 0 3 1 6 5
+let anim_1 = animation "run" 4 0 5 1 6 100
+let anim_2 = animation "run2" 4 0 5 1 6 100
+let anim_3 = animation "idle" 8 0 3 1 6 100
 
 let () =
   Hashtbl.add animation_table (get_name anim_1) anim_1;

@@ -14,6 +14,7 @@ type t = {
   mutable sprite_num_row : int;
   mutable sprite_num_col : int;
   mutable speed : int;
+  mutable time : int;
 }
 
 let get_image_format str =
@@ -47,6 +48,7 @@ let new_spritesheet filename rows cols w h row_start col_start col_end speed =
     sprite_num_row = row_start;
     sprite_num_col = col_start;
     speed;
+    time = 0;
   }
 
 let file_type file =
@@ -64,8 +66,10 @@ let load_image renderer sheet =
   load_texture sheet.filename img_format renderer
 
 let update_sprite_index sheet dt anim =
+  sheet.time <- sheet.time + dt;
   if anim then
-    if dt mod sheet.speed = 0 && dt > sheet.speed then (
+    if sheet.time > sheet.speed then (
+      sheet.time <- 0;
       let row, col =
         if
           sheet.sprite_num_row = sheet.row_start + sheet.rows - 1
