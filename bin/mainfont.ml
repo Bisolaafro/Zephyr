@@ -1,3 +1,5 @@
+(** DEPRECATED *)
+
 open Sdl
 open Final.Fonts
 open Sdlevent

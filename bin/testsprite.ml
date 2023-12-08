@@ -1,4 +1,5 @@
-(* Import the modules *)
+(** DEPRECATED *)
+
 open Final.Keyboard
 open Final.Spritesheet
 open Final.Player

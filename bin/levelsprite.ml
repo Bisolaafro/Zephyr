@@ -1,3 +1,5 @@
+(** DEPRECATED *)
+
 open Sdlevent
 open Sdl
 open Final.Keyboard
