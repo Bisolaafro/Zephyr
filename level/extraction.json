@@ -1,0 +1,10 @@
+{
+    "next_lvl": "control.json",
+    "prev_lvl": "incubation.json",
+    "player_pos": {
+        "x": 100.0,
+        "y": 300.0
+    },
+    "tilemap": "extraction.json",
+    "background": "assets/background.png"
+}
