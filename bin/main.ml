@@ -14,12 +14,17 @@ type state =
 
 (* AUDIO *)
 let _ = open_audio 44100 MIX_DEFAULT_FORMAT 2 2048
-let _ = allocate_channels 4
+let _ = allocate_channels 7
 let state = ref MainMenu
-let fx = [ Chunk.load_wav "assets/jump.wav" ]
+let fx = []
 let select = Chunk.load_wav "assets/select.wav"
 let ambient = Music.load_music "assets/wind.wav"
 let call = Music.load_music "assets/call1.wav"
+let atlas = Chunk.load_wav "assets/music/atlas.mp3"
+let secret = Chunk.load_wav "assets/music/secret-meeting.mp3"
+let cont = Final.Container.empty ()
+let _ = Final.Container.add_from_list [ atlas; secret ] cont
+let _ = volume 5 10
 let main_enabled = true
 
 (* LEVEL *)
@@ -56,7 +61,10 @@ let update_state r dt =
         Music.play_music call 0;
         dismiss main_menu);
       if is_finished main_menu then state := Active
-  | Active -> update_level_loader_state keyboard dt r level_loader
+  | Active ->
+      if playing 5 |> Option.get |> not then
+        play_channel 5 (Final.Container.alternate cont) 0;
+      update_level_loader_state keyboard dt r level_loader
 
 (* INITIALIZE GAME *)
 let init () =
@@ -74,7 +82,8 @@ let init () =
   init_animated_level_loader "surface-1-linker.json" r level_loader fx;
   init_main_menu r main_menu;
   Mouse.show_cursor ~toggle:false;
-  Music.play_music ambient 0;
+  Music.play_music ambient 5;
+  ignore (Music.music_vol 30);
   r
 
 (* DRAW GAME *)
