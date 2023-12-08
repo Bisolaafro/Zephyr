@@ -1,0 +1,10 @@
+{
+    "next_lvl": "",
+    "prev_lvl": "b2-3-linker.json",
+    "player_pos": {
+        "x": 100.0,
+        "y": 300.0
+    },
+    "tilemap": "b2-levels/b2-4.json",
+    "background": "assets/background.png"
+}
