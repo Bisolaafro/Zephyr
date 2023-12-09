@@ -1,42 +1,42 @@
 INSTALLATION
 
 The Zephyr game engine requires several dependencies to run. Some of them 
-are specific to ocaml, while the others are required for SDL.
-The Ocaml dependencies and their versions are the following: 
+are specific to OCaml, while the others are required for SDL.
+The OCaml dependencies and their versions are the following: 
  - ocamlsdl2            0.04
  - ocamlsdl2-image      0.01
  - ocamlsdl2-ttf        0.02
  - tsdl                 1.0.0
  - tsdl-mixer           0.6
- - yojson               2.1.0 
+ - yojson               2.1.0
 
-In addition, we are using compiler version 5.0.0 in our project, 
-which is the one currently used in class. Further, as of 12/0/23, opam will install the 
-above packages with the right version, so using the following commands should suffice:
+In addition, we are using compiler version 5.0.0 in our project, which is the
+one currently used in class. Further, as of 12/0/23, opam will install the above
+packages with the right version, so using the following commands should suffice:
  $ opam install ocamlsdl2
  $ opam install ocamlsdl2-image
  $ opam install ocamlsdl2-ttf
  $ opam install tsdl
  $ opam install tsdl-mixer
  $ opam install yojson
+(the last one, yojson, may or may not be already installed on your system)
 
-However, if the right version is not installed, you can try using, for example,
+However, if the right version of OCamlSDL2 is not installed, you can try using,
+for example:
  $ opam install "ocamlsdl2=0.04"
 This tells opam to install the version number after the equal sign. 
 
-Finally, our project depends almost entirely on SDL2, so you will need to install it. 
-Two of the team members are running WSL2 and Ubuntu 22.04.3 and one is 
-running MacOS. If you have never installed SDL2, running the command 
+Finally, our project depends almost entirely on SDL2, so you will need to
+install it. Two of the team members are running WSL2 and Ubuntu 22.04.3 and one
+is running MacOS. If you have never installed SDL2, running the command:
  $ opam install ocamlsdl2
-should have prompted you to also install SDL2. If this was not the case, 
-the command that the Ubuntu users used to install it was 
+should have prompted you to also install SDL2. If this was not the case, the
+command that the Ubuntu users used to install it was:
  $ apt-get install libsdl2-dev
-In addition to installing SDL, the project requires sdl_mixer, sdl_ttf, and sdl_image. 
-Using the above command should also install these packages.
-On a technical note, the above command installs the following version of SDL2 and extra 
-packages (such as sdl_mixer):
-
-The last one, yojson, may or may not be already installed on your system, 
+In addition to installing SDL, the project requires sdl_mixer, sdl_ttf, and
+sdl_image.  Using the above command should also install these packages.
+On a technical note, the above command installs the following version of SDL2
+and extra packages (such as sdl_mixer):
  libsdl2-2.0-0:amd64               2.0.20+dfsg-2ubuntu1.22.04.1
  libsdl2-dev:amd64                 2.0.20+dfsg-2ubuntu1.22.04.1
  libsdl2-image-dev:amd64           2.0.5+dfsg1-3build1
@@ -45,28 +45,30 @@ The last one, yojson, may or may not be already installed on your system,
  libsdl2-ttf-2.0-0:amd64           2.0.18+dfsg-2
  libsdl2-ttf-dev:amd64             2.0.18+dfsg-2  
 
-Crucially, note that the SDL2 version shown above is 2.0.20, which is the version 
-our project is known to work with. 
+Crucially, note that the SDL2 version shown above is 2.0.20, which is the
+version our project is known to work with. 
 
-As a side note, for most of the duration of the project, all 
-team members used Windows machines with WSL2. However, a team member's 
-computer broke and they started using a Mac. When running the 
-installation command for ocamlsdl2, SDL2 version 2.28.5 was installed, but 
-we are not sure that the project works with other versions of SDL2. 
+As a side note, for most of the duration of the project, all team members used
+Windows machines with WSL2. However, a team member's computer broke and they
+started using a Mac. When running the installation command for ocamlsdl2, SDL2
+version 2.28.5 was installed, on which the project has also proven to work.
+However, we have not tested whether our project works with any other versions of
+SDL2. 
 
-After everything is installed, you can build the project with
+After everything is installed, you can build the project with:
  $ make build
-and run it with 
+Or run it with:
  $ make run
+
 
 MISCELLANEOUS
 
-To run the testing script, you can use the command
+To run the testing script, you can use the command:
  $ make test
 Note that we used the OUnit2 package for this, but this is standard in the class 
 so we didn't show how to install it. 
 
-To generate the documentation using odoc, use the command
- $ make code
-which you can open with 
+To generate the documentation using odoc, use the command:
+ $ make doc
+Which you can open with:
  $ make opendoc
