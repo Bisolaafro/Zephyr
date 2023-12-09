@@ -14,4 +14,5 @@ We are proud to present the Zephyr Game Engine, an easy-to-use game development
   custom types and functions are extremely easy to work with in order to produce
   a custom 2D game.
  
-## Luis Hernández Rocha (lh555), Tawakalt Bisola Okunola (tbo8), Pedro Pontes García (pp457)
+## Authors
+Luis Hernández Rocha (lh555), Tawakalt Bisola Okunola (tbo8), Pedro Pontes García (pp457)
