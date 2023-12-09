@@ -15,4 +15,5 @@ We are proud to present the Zephyr Game Engine, an easy-to-use game development
   a custom 2D game.
  
 ## Authors
-Luis Hernández Rocha (lh555), Tawakalt Bisola Okunola (tbo8), Pedro Pontes García (pp457)
+![Team](assets/splash.png)
+This project is developed by NEOCAML Interactive, a team formed by Luis Hernández Rocha (lh555), Tawakalt Bisola Okunola (tbo8), and Pedro Pontes García (pp457).
