@@ -57,7 +57,7 @@ SDL2.
 
 After everything is installed, you can build the project with:
  $ make build
-Or run it with:
+And run it with:
  $ make run
 
 
@@ -72,3 +72,7 @@ To generate the documentation using odoc, use the command:
  $ make doc
 Which you can open with:
  $ make opendoc
+
+To calculate the LOC, we have provided the command:
+ $ make loc
+Which runs the same command provided on Canvas for line counting.
