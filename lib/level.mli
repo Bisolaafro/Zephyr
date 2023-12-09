@@ -16,6 +16,7 @@ type t = {
   mutable prev_level : string option;
   mutable next_level : string option;
   mutable state : level_state;
+  respawn_pos : Vector.t;
 }
 
 (** [new_level ()] returns a new level. *)
@@ -28,9 +29,6 @@ val init_level : string -> Player.t -> Sdlrender.t -> t -> unit
 (** [update_level_state k dt l] updates level [l] with keyboard state [k] and
     time [dt] elapsed since the last frame, to be drawn on renderer [rndr]. *)
 val update_level_state : Keyboard.t -> int -> t -> unit
-
-(** [draw_level rndr l] draws level [l] to renderer [rndr]. *)
-val draw_level : Sdlrender.t -> t -> unit
 
 (** [draw_animated_level rndr l dt] draws a level [l] which contains animations
     to renderer [rndr], with [dt] as the time elapsed since the last frame. *)

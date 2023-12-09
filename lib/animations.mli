@@ -28,19 +28,7 @@ val get_speed : t -> int
 (** Takes in an animation and returns its name. *)
 val get_name : t -> string
 
-(** Hash table of animations that are used in the current game. *)
-val animation_table : (string, t) Hashtbl.t
-
 (** [animation name rs cs cf r c s] creates an animation with name [name],
     initial sprite [rs], [cs], final column [cf], number of rows [r], number of
     columns [c], and speed [s]. *)
 val animation : string -> int -> int -> int -> int -> int -> int -> t
-
-(** Run animation for our character. *)
-val anim_1 : t
-
-(** Run animation (backwards) for our character. *)
-val anim_2 : t
-
-(** Idle animation for our character *)
-val anim_3 : t

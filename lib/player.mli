@@ -26,9 +26,10 @@ val init_player :
   Mixer.Chunk.t list ->
   unit
 
-(** [update_player_state k dt p] updates the state of player [p] given the time
-    [dt] elapsed since the last frame and the keyboard state [k]. *)
-val update_player_state : Keyboard.t -> int -> t -> unit
+(** [update_player_state k dt rc p] updates the state of player [p] given the
+    time [dt] elapsed since the last frame and the keyboard state [k] and
+    respawn coordinates [rc]. *)
+val update_player_state : Keyboard.t -> int -> Vector.t -> t -> unit
 
 (** [update_player_rects p] is a high-performing function that updates the
     positions of the rectangles representing the player's collision logic
@@ -39,9 +40,6 @@ val update_player_rects : t -> unit
     if so, the name of its animation. If [p] is not animated, the name of its
     animation is an empty string. *)
 val get_anim : t -> bool * string
-
-(** [draw_player rndr p] draws a player [p] to renderer [rndr]. *)
-val draw_player : Sdlrender.t -> t -> unit
 
 (** [draw_animated_player r c w h rndr p] draws an animated player [p] to
     renderer [rndr] with the sprite at [r], [c] of width [w] and height [h]. *)

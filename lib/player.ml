@@ -63,7 +63,7 @@ let update_player_rects t =
         y = int_of_float (float_of_int height -. (t.obj.pos.y +. t.obj.height));
       }
 
-let update_player_state k dt t =
+let update_player_state k dt (rc : Vector.t) t =
   GameObject.update_object_state dt t.obj;
   if query_key A k && not (query_key D k) then (
     t.obj.pos.x <- t.obj.pos.x -. dx;
@@ -95,14 +95,14 @@ let update_player_state k dt t =
   t.objy.pos.x <- t.obj.pos.x +. 10.;
   t.objy.pos.y <- t.obj.pos.y;
   t.obj.on_ground <- false;
-  if t.obj.pos.y < 0. then (
-    let x, y = (100., 700.) in
+  if t.obj.pos.y < -500. then (
     play_channel (-1) (Hashtbl.find t.sounds "death") 0;
-    t.obj.pos.x <- x;
-    t.obj.pos.y <- y)
+    t.obj.vel.x <- 0.;
+    t.obj.vel.y <- 0.;
+    t.obj.pos.x <- rc.x;
+    t.obj.pos.y <- rc.y)
 
 let get_anim t = (t.obj.animated, t.obj.anim_name)
-let draw_player r t = GameObject.draw_object r t.obj
 
 let draw_animated_player row col width height row_space col_space r t =
   GameObject.draw_animated_object row col width height row_space col_space r

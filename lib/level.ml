@@ -7,6 +7,7 @@ open Sdl
 open Textureloader
 open Animations
 open Spritesheet
+open Vector
 
 let collision_boundary_x = 15.
 let collision_boundary_y = 50.
@@ -24,6 +25,7 @@ type t = {
   mutable prev_level : string option;
   mutable next_level : string option;
   mutable state : level_state;
+  respawn_pos : Vector.t;
 }
 
 let new_level () =
@@ -34,21 +36,24 @@ let new_level () =
     prev_level = None;
     next_level = None;
     state = This;
+    respawn_pos = zero ();
   }
 
 let init_level file player r t =
   let lvl_json = "level/" ^ file |> Yojson.Basic.from_file in
   let tilemap_file = "level/" ^ (lvl_json |> member "tilemap" |> to_string) in
-  (* let pos = lvl_json |> member "player_pos" in let x, y = (pos |> member "x"
-     |> to_float, pos |> member "y" |> to_float) in *)
   let next = lvl_json |> member "next_lvl" |> to_string in
   let prev = lvl_json |> member "prev_lvl" |> to_string in
   let bg = lvl_json |> member "background" |> to_string in
+  let player_x = lvl_json |> member "player_pos" |> member "x" |> to_float in
+  let player_y = lvl_json |> member "player_pos" |> member "y" |> to_float in
   init_tilemap tilemap_file r t.tilemap;
   t.player <- Some player;
   t.next_level <- (if next = "" then None else Some next);
   t.prev_level <- (if prev = "" then None else Some prev);
-  t.background <- Some (load_texture bg PNG r)
+  t.background <- Some (load_texture bg PNG r);
+  t.respawn_pos.x <- player_x;
+  t.respawn_pos.y <- player_y
 
 let check_collision i t =
   let player = Option.get t.player in
@@ -120,7 +125,7 @@ let handle_player_collisions t =
 
 let update_level_state keyboard dt t =
   let player = Option.get t.player in
-  update_player_state keyboard dt player;
+  update_player_state keyboard dt t.respawn_pos player;
   handle_player_collisions t;
   if player.obj.pos.x +. (player.obj.width /. 2.) > float_of_int width then (
     match t.next_level with
@@ -141,25 +146,11 @@ let update_level_state keyboard dt t =
         update_player_rects player;
         t.state <- Previous
 
-let draw_level r t =
-  let player = Option.get t.player in
-  Render.copy r ~texture:(Option.get t.background) ~src_rect:bg_rect
-    ~dst_rect:bg_rect ();
-  draw_tilemap r t.tilemap;
-  draw_player r player
-
-let sprite_rows = 12
-let sprite_cols = 8
 let sprite_width = 24
 let sprite_height = 48
 let sprite_speed = 2.0
 let row_space = 0
 let col_space = 24
-
-let spritesheet =
-  new_spritesheet "assets/punkgirly.png" sprite_rows sprite_cols sprite_width
-    sprite_height 0 0 (sprite_cols - 1) 5
-
 let old_anim = ref ""
 
 let draw_level_animated r t dt =
@@ -174,8 +165,10 @@ let draw_level_animated r t dt =
         true)
       else false
     in
-    update_animations spritesheet (Hashtbl.find animation_table name) check;
-    let row, col = update_sprite_index spritesheet dt anim in
+    update_animations player_spritesheet
+      (Hashtbl.find animation_table name)
+      check;
+    let row, col = update_sprite_index player_spritesheet dt anim in
     draw_animated_player row col sprite_width sprite_height row_space col_space
       r player);
   if anim = false then
