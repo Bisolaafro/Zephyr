@@ -9,6 +9,7 @@ type t = {
   mutable city : Sdltexture.t option;
   mutable label : Fonts.t option;
   mutable title : Fonts.t option;
+  mutable skip : Fonts.t option;
   mutable alpha_ctr : int;
   fx : Container.t;
   mutable dismissed : bool;
@@ -24,6 +25,7 @@ let new_main_menu () =
     city = None;
     label = None;
     title = None;
+    skip = None;
     alpha_ctr = 0;
     fx = Container.empty ();
     dismissed = false;
@@ -31,24 +33,30 @@ let new_main_menu () =
   }
 
 let init_main_menu r t =
-  let bg, city, l, ttl =
+  let bg, city, l, ttl, sk =
     ( load_texture "assets/city.jpeg" JPG r,
       load_texture "assets/nightcity.jpeg" JPG r,
       Fonts.new_font_object "assets/douar.ttf" "PRESS ENTER TO CONTINUE" 40
         { Sdlttf.r = 255; g = 255; b = 255; a = 0 },
       Fonts.new_font_object "assets/douar.ttf" "CONCRETE HALLS" 120
+        { Sdlttf.r = 255; g = 255; b = 255; a = 255 },
+      Fonts.new_font_object "assets/douar.ttf" "Press Q to skip" 20
         { Sdlttf.r = 255; g = 255; b = 255; a = 255 } )
   in
   t.background <- Some bg;
   t.city <- Some city;
   t.title <- Some ttl;
   t.label <- Some l;
+  t.skip <- Some sk;
   load_font l;
   load_font ttl;
+  load_font sk;
   let w, h = get_dims l in
   update_position ((width / 2) - (w / 2)) (height - 100) l;
   let w, h = get_dims ttl in
   update_position ((width / 2) - (w / 2)) (height - 700) ttl;
+  let w, h = get_dims sk in
+  update_position ((width / 2) - (w / 2)) (height - 100) sk;
   Texture.set_blend_mode bg Blend;
   Texture.set_blend_mode city Blend
 
@@ -65,11 +73,12 @@ let is_dismissed t = t.dismissed
 let is_finished t = t.finished
 
 let draw_main_menu r t =
-  let bg, city, ttl, l =
+  let bg, city, ttl, l, sk =
     ( Option.get t.background,
       Option.get t.city,
       Option.get t.title,
-      Option.get t.label )
+      Option.get t.label,
+      Option.get t.skip )
   in
   let float_ctr = float_of_int t.alpha_ctr in
   if t.dismissed then begin
@@ -97,4 +106,6 @@ let draw_main_menu r t =
       ~alpha:
         (int_of_float ((sin (float_of_int t.alpha_ctr /. 1000.) ** 2.) *. 255.))
       l
-  else Render.copy r ~texture:city ~src_rect ~dst_rect ()
+  else (
+    Render.copy r ~texture:city ~src_rect ~dst_rect ();
+    static_render r sk ())

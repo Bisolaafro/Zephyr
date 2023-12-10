@@ -59,6 +59,9 @@ let update_state r dt =
         if Music.music_vol (-1) <= 32 then Music.free_music ambient;
         Music.play_music call 0;
         dismiss main_menu);
+      if query_key Q keyboard && is_dismissed main_menu then (
+        Music.free_music call;
+        state := Active);
       if is_finished main_menu then state := Active
   | Active ->
       if playing 5 |> Option.get |> not then

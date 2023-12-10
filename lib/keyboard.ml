@@ -141,7 +141,7 @@ let update_key k s t =
     | Scancode.SPACE -> t.space <- s_bool
     | Scancode.ESCAPE -> t.esc <- s_bool
     | Scancode.RETURN -> t.enter_main <- s_bool
-    | _ -> print_string "Non alpha-numeric key pressed!"
+    | _ -> ()
   end
 
 let update_keyboard e t =
