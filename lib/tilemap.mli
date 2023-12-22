@@ -4,18 +4,20 @@
     to create, initialize and draw a tilemap.*)
 
 open Gameobject
+open Tsdl.Sdl
 
 (** Represents a tileset. *)
 type tileset_t = {
-  mutable texture : Sdltexture.t option;
+  mutable texture : texture option;
   mutable cols : int;
   mutable tile_side : int;
 }
 
 (** Represents a tilemap. *)
 type t = {
-  mutable tiles : (GameObject.t * Sdlrect.t) option array option;
+  mutable tiles : (Gameobject.t * rect) option array option;
   mutable tilemap_cols : int;
+  mutable tilemap_rows : int;
   mutable tile_side : int;
   tileset : tileset_t;
 }
@@ -23,11 +25,11 @@ type t = {
 (** [new_tilemap ()] returns a new tilemap.*)
 val new_tilemap : unit -> t
 
-(** [init_tilemap fl rndr tmp] initializes the tilemap [tmp] with the JSON file
-    [fl] to be drawn on renderer [rndr]. *)
-val init_tilemap : string -> Sdlrender.t -> t -> unit
+(** [init_tilemap fl r tmp] initializes the tilemap [tmp] with the JSON file
+    [fl] to be drawn on renderer [r]. *)
+val init_tilemap : string -> renderer -> t -> unit
 
-(** [draw_tilemap rndr tmp] draws the tilemap [tmp] on renderer [rndr]. The
-    optional int argument is meant for internal recursion and should not be used
+(** [draw_tilemap r tmp] draws the tilemap [tmp] on renderer [r]. The optional
+    int argument is meant for internal recursion and should not be used
     externally. *)
-val draw_tilemap : Sdlrender.t -> ?i:int -> t -> unit
+val draw_tilemap : renderer -> ?i:int -> t -> unit

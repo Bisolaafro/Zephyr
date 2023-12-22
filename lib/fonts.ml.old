@@ -1,0 +1,84 @@
+open Tsdl.Sdl
+open Tsdl_ttf.Ttf
+
+type t = {
+  filename : string;
+  mutable text : string;
+  mutable font_size : int;
+  mutable color : color;
+  mutable src_rect : rect;
+  mutable surface : surface option;
+  mutable dst_rect : rect option;
+  mutable vel_x : int option;
+  mutable vel_y : int option;
+}
+
+let new_font_object filename text font_size color =
+  let font = open_font filename font_size |> Result.get_ok in
+  let w, h = size_text font text |> Result.get_ok in
+  let src_rect = Rect.create 0 0 w h in
+  {
+    filename;
+    text;
+    font_size;
+    color;
+    src_rect;
+    surface = None;
+    dst_rect = None;
+    vel_x = None;
+    vel_y = None;
+  }
+
+let quit_font () = Tsdl_ttf.Ttf.quit ()
+
+let load_font t =
+  let font = open_font t.filename t.font_size |> Result.get_ok in
+  t.surface <- Some (render_text_blended font t.text t.color |> Result.get_ok)
+
+let static_render r t =
+  let sf = Option.get t.surface in
+  let tx = create_texture_from_surface r sf |> Result.get_ok in
+  render_copy rdnr tx t.src_rect Render.copy renderer ~texture:tex
+    ~src_rect:font_object.src_rect
+    ~dst_rect:(Option.get font_object.dst_rect)
+
+let static_render_alpha renderer ~alpha font_object =
+  let tex =
+    Texture.create_from_surface renderer (Option.get font_object.surface)
+  in
+  Texture.set_blend_mode tex Blend;
+  Texture.set_alpha_mod tex alpha;
+  Render.copy renderer ~texture:tex ~src_rect:font_object.src_rect
+    ~dst_rect:(Option.get font_object.dst_rect)
+    ()
+
+let update_position x y font_object =
+  let w, h = Surface.get_dims (Option.get font_object.surface) in
+  font_object.dst_rect <- Some (Sdlrect.make4 ~x ~y ~w ~h)
+
+let get_dims font_object = Surface.get_dims (Option.get font_object.surface)
+let get_speed font_object = (font_object.vel_x, font_object.vel_y)
+let get_color font_object = font_object.color
+let get_text font_object = font_object.text
+
+let font_speed vel_x vel_y font_object =
+  font_object.vel_x <- vel_x;
+  font_object.vel_y <- vel_y
+
+let mobile_render renderer font_object x_max y_max dt =
+  let tex =
+    Texture.create_from_surface renderer (Option.get font_object.surface)
+  in
+  let dst_rect =
+    if font_object.vel_y <> None then
+      let y = dt / Option.get font_object.vel_y mod y_max in
+      { (Option.get font_object.dst_rect) with Rect.y }
+    else Option.get font_object.dst_rect
+  in
+  let dst_rect =
+    if font_object.vel_x <> None then
+      let x = dt / Option.get font_object.vel_x mod x_max in
+      { dst_rect with Rect.x }
+    else dst_rect
+  in
+  Render.copy renderer ~texture:tex ~src_rect:font_object.src_rect ~dst_rect

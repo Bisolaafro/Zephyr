@@ -1,16 +1,18 @@
 open Gameobject
 open Yojson
-open Textureloader
+open Tsdl.Sdl
+open Tsdl_image.Image
 
 type tileset_t = {
-  mutable texture : Sdltexture.t option;
+  mutable texture : texture option;
   mutable cols : int;
   mutable tile_side : int;
 }
 
 type t = {
-  mutable tiles : (GameObject.t * Sdlrect.t) option array option;
+  mutable tiles : (Gameobject.t * rect) option array option;
   mutable tilemap_cols : int;
+  mutable tilemap_rows : int;
   mutable tile_side : int;
   tileset : tileset_t;
 }
@@ -19,6 +21,7 @@ let new_tilemap () =
   {
     tiles = None;
     tilemap_cols = 0;
+    tilemap_rows = 0;
     tile_side = 0;
     tileset = { texture = None; cols = 0; tile_side = 0 };
   }
@@ -47,7 +50,7 @@ let extract_tileset_filename json =
 let extract_tileset_texture r tileset_json =
   let open Basic.Util in
   let filename = tileset_json |> member "image" |> to_string in
-  load_texture filename PNG r
+  load_texture r filename |> Result.get_ok
 
 let extract_tileset_cols tileset_json =
   let open Basic.Util in
@@ -76,12 +79,12 @@ let rec init_tilemap_helper ?(i = 0) lst t =
         let src_x = tile_code mod t.tileset.cols * t.tileset.tile_side in
         let src_y = tile_code / t.tileset.cols * t.tileset.tile_side in
         let src_rect =
-          Sdlrect.make4 ~x:src_x ~y:src_y ~w:t.tileset.tile_side
+          Rect.create ~x:src_x ~y:src_y ~w:t.tileset.tile_side
             ~h:t.tileset.tile_side
         in
-        let tile_obj = GameObject.new_object () in
+        let tile_obj = Gameobject.new_object () in
         begin
-          GameObject.init_object
+          Gameobject.init_object
             (Option.get t.tileset.texture)
             (x0, y0) (x1, y1) false tile_obj;
           Array.set tiles i (Some (tile_obj, src_rect))
@@ -100,6 +103,7 @@ let init_tilemap file r t =
   let tile_side = Consts.width / tilemap_cols in
   t.tiles <- Some (Array.make (tilemap_cols * tilemap_rows) None);
   t.tilemap_cols <- tilemap_cols;
+  t.tilemap_rows <- tilemap_rows;
   t.tile_side <- tile_side;
   t.tileset.texture <- Some tileset_texture;
   t.tileset.cols <- tileset_cols;
@@ -114,7 +118,7 @@ let rec draw_tilemap r ?(i = 0) t =
     if tile <> None then begin
       let obj, src_raw = Option.get tile in
       let src = Some src_raw in
-      GameObject.draw_object ?src ?flip:(Some Sdlrender.Flip_None) r obj
+      Gameobject.draw_object ?src r obj
     end;
     draw_tilemap r ?i:(Some (i + 1)) t
   end

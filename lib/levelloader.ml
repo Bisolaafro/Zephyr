@@ -1,8 +1,8 @@
 open Level
 open Player
-open Textureloader
 open Consts
 open Spritesheet
+open Tsdl_image.Image
 
 type t = {
   level : Level.t;
@@ -13,8 +13,11 @@ let new_level_loader () = { level = new_level (); player = new_player () }
 
 let init_animated_level_loader file r t fx =
   let boy = load_image r player_spritesheet in
-  init_player boy (x0, y0) (x0 +. player_width, y0 +. player_height) t.player fx;
-  init_level file t.player r t.level
+  init_level file t.player r t.level;
+  init_player boy (0., -1000.)
+    ( 0. +. (player_width *. float_of_int t.level.tilemap.tile_side),
+      -1000. +. (player_height *. float_of_int t.level.tilemap.tile_side) )
+    t.player fx
 
 let update_level_loader_state k dt r t =
   update_level_state k dt t.level;

@@ -1,17 +1,16 @@
+open Tsdl.Sdl
+open Tsdl_image.Image
 open Player
 open Tilemap
 open Yojson.Basic.Util
-open Textureloader
 open Consts
-open Sdl
-open Textureloader
 open Animations
 open Spritesheet
 open Vector
 
 let collision_boundary_x = 15.
 let collision_boundary_y = 50.
-let bg_rect = Rect.make4 ~x:0 ~y:0 ~w:width ~h:height
+let bg_rect = Rect.create ~x:0 ~y:0 ~w:width ~h:height
 
 type level_state =
   | Previous
@@ -21,7 +20,7 @@ type level_state =
 type t = {
   mutable player : Player.t option;
   tilemap : Tilemap.t;
-  mutable background : Sdltexture.t option;
+  mutable background : texture option;
   mutable prev_level : string option;
   mutable next_level : string option;
   mutable state : level_state;
@@ -45,26 +44,24 @@ let init_level file player r t =
   let next = lvl_json |> member "next_lvl" |> to_string in
   let prev = lvl_json |> member "prev_lvl" |> to_string in
   let bg = lvl_json |> member "background" |> to_string in
-  let player_x = lvl_json |> member "player_pos" |> member "x" |> to_float in
-  let player_y = lvl_json |> member "player_pos" |> member "y" |> to_float in
+  let player_x = lvl_json |> member "player_pos" |> member "x" |> to_int in
+  let player_y = lvl_json |> member "player_pos" |> member "y" |> to_int in
   init_tilemap tilemap_file r t.tilemap;
   t.player <- Some player;
   t.next_level <- (if next = "" then None else Some next);
   t.prev_level <- (if prev = "" then None else Some prev);
-  t.background <- Some (load_texture bg PNG r);
-  t.respawn_pos.x <- player_x;
-  t.respawn_pos.y <- player_y
+  t.background <- Some (load_texture r bg |> Result.get_ok);
+  t.respawn_pos.x <- float_of_int (player_x * t.tilemap.tile_side);
+  t.respawn_pos.y <-
+    float_of_int
+      (height - ((t.tilemap.tilemap_rows - player_y) * t.tilemap.tile_side))
 
 let check_collision i t =
   let player = Option.get t.player in
   let tiles = Option.get t.tilemap.tiles in
   if tiles.(i) <> None then begin
     let obj, _ = Option.get tiles.(i) in
-    if
-      Sdlrect.has_intersection
-        (Option.get player.objy.rect)
-        (Option.get obj.rect)
-    then begin
+    if has_intersection (Option.get player.objy.rect) (Option.get obj.rect) then begin
       if
         player.obj.pos.y > obj.pos.y +. obj.height -. collision_boundary_y
         && player.obj.vel.y < 0.
@@ -80,11 +77,7 @@ let check_collision i t =
         player.obj.pos.y <- obj.pos.y -. player.obj.height;
         player.obj.vel.y <- 0.)
     end;
-    if
-      Sdlrect.has_intersection
-        (Option.get player.objx.rect)
-        (Option.get obj.rect)
-    then begin
+    if has_intersection (Option.get player.objx.rect) (Option.get obj.rect) then begin
       if
         player.obj.pos.x +. player.obj.width < obj.pos.x +. collision_boundary_x
         && player.obj.vel.x > 0.
@@ -125,8 +118,8 @@ let handle_player_collisions t =
 
 let update_level_state keyboard dt t =
   let player = Option.get t.player in
-  update_player_state keyboard dt t.respawn_pos player;
   handle_player_collisions t;
+  update_player_state keyboard dt t.respawn_pos player;
   if player.obj.pos.x +. (player.obj.width /. 2.) > float_of_int width then (
     match t.next_level with
     | None ->
@@ -154,8 +147,8 @@ let col_space = 24
 let old_anim = ref ""
 
 let draw_level_animated r t dt =
-  Render.copy r ~texture:(Option.get t.background) ~src_rect:bg_rect
-    ~dst_rect:bg_rect ();
+  render_copy ~src:bg_rect ~dst:bg_rect r (Option.get t.background)
+  |> Result.get_ok;
   let player = Option.get t.player in
   let anim, name = get_anim player in
   if anim then (

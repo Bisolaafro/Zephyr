@@ -2,8 +2,8 @@
     "next_lvl": "surface-5-linker.json",
     "prev_lvl": "surface-3-linker.json",
     "player_pos": {
-        "x": 100.0,
-        "y": 900.0
+        "x": 1,
+        "y": 7
     },
     "tilemap": "surface-levels/surface-4.json",
     "background": "assets/backgrounds/surf-background.png"

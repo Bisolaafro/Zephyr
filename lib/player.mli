@@ -1,14 +1,15 @@
 (** Player module. Includes functions to initialize, update state and draw a
     player. *)
 
+open Tsdl.Sdl
 open Mixer
 
 (** Represents a player. *)
 type t = {
-  objx : Gameobject.GameObject.t;
-  objy : Gameobject.GameObject.t;
-  obj : Gameobject.GameObject.t;
-  mutable jumped : bool;
+  objx : Gameobject.t;
+  objy : Gameobject.t;
+  obj : Gameobject.t;
+  mutable sched_jump : bool;
   fx : Container.t;
   sounds : (string, Chunk.t) Hashtbl.t;
 }
@@ -19,12 +20,7 @@ val new_player : unit -> t
 (** [init_player tx p fx] initializes a player [p] with texture [tx] and sound
     effects [fx]. *)
 val init_player :
-  Sdltexture.t ->
-  float * float ->
-  float * float ->
-  t ->
-  Mixer.Chunk.t list ->
-  unit
+  texture -> float * float -> float * float -> t -> Mixer.Chunk.t list -> unit
 
 (** [update_player_state k dt rc p] updates the state of player [p] given the
     time [dt] elapsed since the last frame and the keyboard state [k] and
@@ -41,7 +37,7 @@ val update_player_rects : t -> unit
     animation is an empty string. *)
 val get_anim : t -> bool * string
 
-(** [draw_animated_player r c w h rndr p] draws an animated player [p] to
-    renderer [rndr] with the sprite at [r], [c] of width [w] and height [h]. *)
+(** [draw_animated_player r c w h r p] draws an animated player [p] to renderer
+    [r] with the sprite at [r], [c] of width [w] and height [h]. *)
 val draw_animated_player :
-  int -> int -> int -> int -> int -> int -> Sdltype.renderer -> t -> unit
+  int -> int -> int -> int -> int -> int -> renderer -> t -> unit

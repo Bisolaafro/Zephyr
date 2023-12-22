@@ -18,7 +18,7 @@ type image_format =
   | XV
   | WEBP
 
-(** [load_texture fl format rndr] creates a texture using the renderer [rndr].
+(** [load_texture fl format r] creates a texture using the renderer [r].
     The picture is initialized from an [fl] file name. Requires: the file
     extension of the image referenced in [fl] must match that of [format].*)
 val load_texture : string -> image_format -> Sdlrender.t -> Sdltexture.t

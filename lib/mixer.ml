@@ -84,9 +84,9 @@ module type ChannelTrackerType = sig
 
   val create_tracker : int -> t
   val get_reserved : t -> int
-  val reserve_channels : t -> Gameobject.GameObject.t -> int -> unit
-  val get_obj_alloc : t -> Gameobject.GameObject.t -> int list option
-  val free_obj : t -> Gameobject.GameObject.t -> unit
+  val reserve_channels : t -> Gameobject.t -> int -> unit
+  val get_obj_alloc : t -> Gameobject.t -> int list option
+  val free_obj : t -> Gameobject.t -> unit
 end
 
 (** END OF TYPES **)
@@ -133,8 +133,8 @@ module ChannelTracker : ChannelTrackerType = struct
   type t = {
     size : int;
     mutable reserved : int;
-    arr : Gameobject.GameObject.t ref option Array.t;
-    hash : (Gameobject.GameObject.t, int list) Hashtbl.t;
+    arr : Gameobject.t ref option Array.t;
+    hash : (Gameobject.t, int list) Hashtbl.t;
   }
 
   let create_tracker n =

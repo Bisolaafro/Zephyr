@@ -156,16 +156,16 @@ module type ChannelTrackerType = sig
       GameObject on the tracker [t]. Requires: adding [num] to the already
       reserved channels must not exceed the total number of tracks already
       allocated. *)
-  val reserve_channels : t -> Gameobject.GameObject.t -> int -> unit
+  val reserve_channels : t -> Gameobject.t -> int -> unit
 
   (** [get_obj_alloc t obj] returns a list with channels allocated to the game
       object [obj]. Note that these numbers can be safely used with
       [play_channel]. In fact, this is the intended use. *)
-  val get_obj_alloc : t -> Gameobject.GameObject.t -> int list option
+  val get_obj_alloc : t -> Gameobject.t -> int list option
 
   (** [free_obj tr obj] removes the channel reservation of [obj] and makes it
       available to other objects.*)
-  val free_obj : t -> Gameobject.GameObject.t -> unit
+  val free_obj : t -> Gameobject.t -> unit
 end
 
 (** Implementation of ChannelTrackerType *)

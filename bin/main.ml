@@ -1,3 +1,3 @@
-open Final.Game
+open Game
 
 let () = run ()

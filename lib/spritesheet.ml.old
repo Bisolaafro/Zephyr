@@ -1,5 +1,6 @@
+open Sdl
+open Textureloader
 open Animations
-open Tsdl_image.Image
 
 type t = {
   filename : string;
@@ -15,6 +16,24 @@ type t = {
   mutable speed : int;
   mutable time : int;
 }
+
+let get_image_format str =
+  match str with
+  | "png" -> PNG
+  | "jpg" -> JPG
+  | "pcx" -> PCX
+  | "bmp" -> BMP
+  | "ico" -> ICO
+  | "cur" -> CUR
+  | "gif" -> GIF
+  | "lbm" -> LBM
+  | "pnm" -> PNM
+  | "tif" -> TIF
+  | "xcf" -> XCF
+  | "xpm" -> XPM
+  | "xv" -> XV
+  | "webp" -> WEBP
+  | _ -> failwith "Unsupported Image Format"
 
 let new_spritesheet filename rows cols w h row_start col_start col_end speed =
   {
@@ -41,7 +60,10 @@ let file_type file =
     else if sub_str = ".xv" then "xv"
     else sub_str
 
-let load_image r t = load_texture r t.filename |> Result.get_ok
+let load_image renderer sheet =
+  let final_str = file_type sheet.filename in
+  let img_format = get_image_format final_str in
+  load_texture sheet.filename img_format renderer
 
 let update_sprite_index sheet dt anim =
   sheet.time <- sheet.time + dt;

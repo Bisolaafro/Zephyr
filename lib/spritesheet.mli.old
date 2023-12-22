@@ -1,10 +1,14 @@
 (** Spritesheet module. Provides a type and functions to manage and draw
     animated textures from spritesheets. *)
 
-open Tsdl.Sdl
+open Textureloader
 
 (** Represents a spritesheet. *)
 type t
+
+(** [get_image_format ext] returns the image format corresponding to the file
+    extension [ext]. *)
+val get_image_format : string -> image_format
 
 (** [new_spritesheet fl r c w h rs cs ce sp] returns a new spritesheet from the
     file [fl], with rows [r], columns [c], sprite width [w], height [h], whose
@@ -18,7 +22,7 @@ val file_type : string -> string
 
 (** Loads the image file as a texture - Paramter [renderer] : the renderer to
     draw on - Parameter [sheet] : the spritesheet. *)
-val load_image : renderer -> t -> texture
+val load_image : Sdltype.renderer -> t -> Sdltexture.t
 
 (** [update_sprite_index sheet dt check] updates the sprite of the spritesheet
     [sheet] considering the time [dt] elapsed since the last frame if [check] is

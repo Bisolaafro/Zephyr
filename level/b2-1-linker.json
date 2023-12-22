@@ -2,8 +2,8 @@
     "next_lvl": "b2-2-linker.json",
     "prev_lvl": "b1-5-linker.json",
     "player_pos": {
-        "x": 100.0,
-        "y": 500.0
+        "x": 1,
+        "y": 3
     },
     "tilemap": "b2-levels/b2-1.json",
     "background": "assets/backgrounds/surf-background.png"

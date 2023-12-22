@@ -1,6 +1,6 @@
 (lang dune 3.10)
 
-(name final)
+(name game)
 
 (source
  (github pp457/cs3110-final))

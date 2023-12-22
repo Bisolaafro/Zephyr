@@ -2,22 +2,24 @@
     as functions to create one, initialize it, update it, draw it, dismiss it,
     check if it is dismissed, and check if it is finished. *)
 
+open Tsdl.Sdl
+open Final.Keyboard
+
 (** Represents a main menu. *)
 type t
 
 (** [new_main_menu ()] returns a new main menu. *)
 val new_main_menu : unit -> t
 
-(** [init_main_menu rndr m] initializes main menu [m] to be drawn on renderer
-    [rndr]. *)
-val init_main_menu : Sdlrender.t -> t -> unit
+(** [init_main_menu r m] initializes main menu [m] to be drawn on renderer [r]. *)
+val init_main_menu : renderer -> t -> unit
 
-(** [update_main_menu_state k dt rndr m] updates main menu [m] with keyboard
-    state [k], time [dt] elapsed since last frame, drawn on renderer [rndr]. *)
-val update_main_menu_state : Keyboard.t -> int -> Sdlrender.t -> t -> unit
+(** [update_main_menu_state k dt r m] updates main menu [m] with keyboard state
+    [k], time [dt] elapsed since last frame, drawn on renderer [r]. *)
+val update_main_menu_state : Final.Keyboard.t -> int -> renderer -> t -> unit
 
-(** [draw_main_menu rndr m] draws main menu [m] to renderer [rndr]. *)
-val draw_main_menu : Sdlrender.t -> t -> unit
+(** [draw_main_menu r m] draws main menu [m] to renderer [r]. *)
+val draw_main_menu : renderer -> t -> unit
 
 (** [dismiss m] sends the dismiss signal to main menu [m]. *)
 val dismiss : t -> unit

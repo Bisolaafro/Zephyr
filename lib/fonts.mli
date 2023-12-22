@@ -1,58 +1,35 @@
 (** Fonts module. Provides a type to represent text labels and functions to
     manipulate them. *)
 
+open Tsdl.Sdl
+open Tsdl_ttf.Ttf
+
 (** Represents a text label. *)
 type t
 
-(** Shuts down the SDL_ttf library and frees any resources allocated by it. *)
+(** [quit_font ()] shuts down the SDL_ttf library and frees any resources
+    allocated by it. *)
 val quit_font : unit -> unit
 
-(** Creates a new text with font
-    - Parameter [filename] : the file path of the font to be used
-    - Parameter [text] - the text to be rendered to the screen
-    - Parameter [font_size] : the size of the text
-    - Parameter [color] : the color of the text. *)
-val new_font_object : string -> string -> int -> Sdlttf.color -> t
+(** [new_font_object ()] creates a new font object. *)
+val new_font_object : unit -> t
 
-(** Creates a surface to render the text on. *)
-val load_font : t -> unit
+(** [init_font_object r fl txt (xc, yc) sz cl a t] initializes a font object [t]
+    to be drawn on renderer [r], using the font file [fl], with text [txt],
+    centered at [(xc, yc)], with font size [sz], color [cl], and alpha [a]. *)
+val init_font_object :
+  renderer ->
+  string ->
+  string ->
+  float * float ->
+  event_type ->
+  color ->
+  event_type ->
+  t ->
+  unit
 
-(** Renders the text using the font to the screen. *)
-val static_render : Sdltype.renderer -> t -> unit -> unit
+(** [draw_font_object r t] renders font object [t] to renderer [r]. *)
+val draw_font_object : renderer -> t -> unit
 
-(** Renders the text using the font and the given alpha value to the screen. *)
-val static_render_alpha : Sdltype.renderer -> alpha:int -> t -> unit
-
-(** Updates the position of the text on the screen
-    - Parameter [x] - the starting x position of the text
-    - Parameter [y] - the starting y position of the text
-    - Parameter [t] - the font/text to be update *)
-val update_position : int -> int -> t -> unit
-
-(** Returns the speed of the moving text in tuple format, with the first element
-    being the velocity in the x direction and the second element being the
-    velocity in the y direction.*)
-val get_speed : t -> int option * int option
-
-(** Returns the dimensions of the font surface as a tuple of integers. *)
-val get_dims : t -> int * int
-
-(** Returns the color of the text*)
-val get_color : t -> Sdlttf.color
-
-(** Returns the text being used*)
-val get_text : t -> string
-
-(** Updates the speed of the moving text
-    - Parameter [vel_x] - the x velocity of the moving text
-    - Parameter [vel_y] - the y velocity of the moving text
-    - Parameter [t] : the font/text to be updated *)
-val font_speed : int option -> int option -> t -> unit
-
-(** Renders the moving text.
-    - Parameter [renderer] - the renderer to draw on
-    - Parameter [t] - the font/text to be rendered
-    - Parameter [x_max] - maximum x position of the font/text
-    - Parameter [y_max] - maximum y position of the font/text
-    - Parameter [dt] - the timer for changing the text position *)
-val mobile_render : Sdltype.renderer -> t -> int -> int -> int -> unit -> unit
+(** [change_alpha a t] changes the alpha value of font object [t]. *)
+val change_alpha : int -> t -> unit
